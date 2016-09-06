@@ -1,0 +1,40 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+div, ul, li {
+	box-sizing: border-box;
+}
+
+.container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+}
+
+ul {
+	margin: 1rem;
+	padding: 0.5rem;
+	background: whitesmoke;
+	list-style-type: none;
+}
+
+li, li.gu-mirror {
+	min-width: 200px;
+	margin: 0;
+	padding: 1rem;
+	border: solid 1px silver;
+	border-bottom: 0;
+	background: white;
+}
+
+li:last-child {
+	border-bottom: solid 1px silver;
+}
+
+li.gu-mirror {
+	list-style-type: none;
+}
