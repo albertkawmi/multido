@@ -81,7 +81,7 @@ export default class App extends Component {
       <div className="container">
         {Object.keys(this.state.lists).map(listId =>
           <DragAndDropList
-            key={listId}
+            key={listId + Date.now()} // changing key forces re-render whole component
             listId={listId}
             init={this.initDragula}
             list={this.state.lists[listId]}
@@ -107,7 +107,7 @@ class ToggleItem extends Component {
   render() {
     return (
       <span style={{
-        color: this.state.active
+        color: this.props.active
           ? 'green'
           : 'black'
       }}>
@@ -120,32 +120,12 @@ class ToggleItem extends Component {
 
 class DragAndDropList extends Component {
   shouldComponentUpdate() {
-    return false;
-  }
-  rootRef(rootEl) {
-    if (rootEl) {
-      this.rootEl = rootEl;
-      this.props.init(rootEl);
-    }
-  }
-  renderRows() {
-    if (this.rootEl) {
-      const { list, items, listId } = this.props;
-      ReactDOM.render(
-        this.rootEl
-      );
-    }
-  }
-  componentDidMount() {
-    this.renderRows();
-  }
-  componentDidUpdate() {
-    this.renderRows();
+    return true;
   }
   render() {
-    const { list, listId, items } = this.props;
+    const { list, listId, items, init } = this.props;
     return (
-      <ul className="dnd" ref={el => this.rootRef(el)} data-id={listId}>
+      <ul className="dnd" ref={el => init(el)} data-id={listId}>
         {list.map(id => <li key={id} data-id={id}>{items[id]}</li>)}
       </ul>
     );
