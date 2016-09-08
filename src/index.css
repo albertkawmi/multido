@@ -38,3 +38,7 @@ li:last-child {
 li.gu-mirror {
 	list-style-type: none;
 }
+
+input[type=checkbox] {
+	margin-right: 0.5rem;
+}

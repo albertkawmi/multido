@@ -1,133 +1,84 @@
-import React, { Component } from 'react';
-import Dragula from 'react-dragula';
-import ReactDOM from 'react-dom';
+import React, { Component, PropTypes } from 'react';
+
+const CONTEXT = {
+  actions: PropTypes.object
+}
 
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       lists: {
-        hash0: [
-          'hash1',
-          'hash2',
-          'hash3',
-        ],
-        hash4: [
-          'hash5',
-          'hash6',
-          'hash7',
-        ]
+        list1: ['item1', 'item2', 'item3'],
+        list2: ['item4', 'item5', 'item6']
       },
       items: {
-        hash1: <ToggleItem>Item for hash 1</ToggleItem>,
-        hash2: <ToggleItem>Item for hash 2</ToggleItem>,
-        hash3: <ToggleItem>Item for hash 3</ToggleItem>,
-        hash5: <ToggleItem>Item for hash 5</ToggleItem>,
-        hash6: <ToggleItem>Item for hash 6</ToggleItem>,
-        hash7: <ToggleItem>Item for hash 7</ToggleItem>
+        item1: { id: 'item1', text: 'Item 1', completed: false },
+        item2: { id: 'item2', text: 'Item 2', completed: false },
+        item3: { id: 'item3', text: 'Item 3', completed: false },
+        item4: { id: 'item4', text: 'Item 4', completed: false },
+        item5: { id: 'item5', text: 'Item 5', completed: false },
+        item6: { id: 'item6', text: 'Item 6', completed: false }
+      }
+    }
+  }
+  getChildContext() {
+    return {
+      actions: {
+        createList: (id, items) => this.setState({
+          lists: {
+            ...this.state.lists,
+            [id]: items
+          }
+        }),
+        toggleItem: (id) => this.setState({
+          items: {
+            ...this.state.items,
+            [id]: {
+              ...this.state.items[id],
+              completed: !this.state.items[id].completed
+            }
+          }
+        }),
+        getList: (id) => this.state.lists[id],
+        getItem: (id) => this.state.items[id],
       }
     };
-    this.initDragula = this.initDragula.bind(this);
-  }
-  componentWillMount() {
-    setInterval(() => {
-      this.setState({
-        items: {
-          ...this.state.items,
-          hash2: <ToggleItem>Random item {Math.floor(Math.random() * 10)}</ToggleItem>
-        }
-      });
-    }, 5000);
-    this.drake = Dragula([], {
-      accepts() {
-        return true;
-      }
-    });
-    this.drake.on('drop', (el, target, source) => {
-      if (!target) return;
-      const targetId = target.getAttribute('data-id');
-      const newTarget = Array.from(target.children)
-          .map(child => child.getAttribute('data-id'));
-      const updatedLists = {
-        [targetId]: newTarget
-      };
-      if (source) {
-        const sourceId = source.getAttribute('data-id');
-        const newSource = Array.from(source.children)
-          .map(child => child.getAttribute('data-id'));
-        updatedLists[sourceId] = newSource;
-      }
-      this.setState({
-        lists: {
-          ...this.state.lists,
-          ...updatedLists
-        }
-      });
-    });
-  }
-  componentWillUpdate(nextProps, nextState) {
-    console.debug(nextState);
-  }
-  componentWillUnmount() {
-    this.drake.destroy();
-  }
-  initDragula(container) {
-    if (container) {
-      this.drake.containers.push(container);
-    }
   }
   render() {
-    return (
-      <div className="container">
-        {Object.keys(this.state.lists).map(listId =>
-          <DragAndDropList
-            key={listId + Date.now()} // changing key forces re-render whole component
-            listId={listId}
-            init={this.initDragula}
-            list={this.state.lists[listId]}
-            items={this.state.items}
-          />
-        )}
-      </div>
-    );
+    return <Board lists={this.state.lists} />;
   }
 }
 
-class ToggleItem extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      active: false
-    }
-    this.toggle = this.toggle.bind(this);
-  }
-  toggle() {
-    this.setState({ active: !this.state.active})
-  }
-  render() {
-    return (
-      <span style={{
-        color: this.props.active
-          ? 'green'
-          : 'black'
-      }}>
-        <input type="checkbox" onChange={this.toggle}/>
-        {this.props.children}
-      </span>
-    );
-  }
-}
+App.childContextTypes = CONTEXT;
 
-class DragAndDropList extends Component {
-  shouldComponentUpdate() {
-    return true;
-  }
-  render() {
-    const { list, listId, items, init } = this.props;
-    return (
-      <ul className="dnd" ref={el => init(el)} data-id={listId}>
-        {list.map(id => <li key={id} data-id={id}>{items[id]}</li>)}
-      </ul>
-    );
-  }
-}
+const Board = ({ lists }, { actions }) =>
+  <div>
+    {Object.keys(lists).map(listId =>
+      <List key={listId} items={actions.getList(listId)} />
+    )}
+  </div>;
+
+const List = ({ items }, { actions }) =>
+  <ul>
+    {items.map(itemId => <Item key={itemId} {...actions.getItem(itemId)} />)}
+  </ul>;
+
+const Item = ({ id, text, completed }, { actions }) =>
+  <li>
+    <input
+      id={id}
+      type="checkbox"
+      checked={completed}
+      onChange={() => actions.toggleItem(id)}
+      />
+    <span style={{
+      color: completed ? 'gray' : 'black',
+      textDecoration: completed ? 'line-through' : 'none'
+    }}>{text}</span>
+  </li>;
+
+Board.contextTypes = CONTEXT;
+List.contextTypes = CONTEXT;
+Item.contextTypes = CONTEXT;
+
