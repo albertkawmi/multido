@@ -58,6 +58,7 @@ div, ul, li, main, section {
 	padding: 0.5rem;
 	overflow-x: scroll;
 	margin: 0 auto;
+	min-height: 4rem;
 }
 
 .board__new-list {
