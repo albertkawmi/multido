@@ -40,10 +40,13 @@ class Boards extends Component {
   	return <main className="boards">
   		{Object.keys(boards).map(
 	  		boardId => <Board
-	  			{...actions.getBoard(boardId)}
+	  			{...actions.get('boards', boardId)}
 	  			boardId={boardId}
-	  			key={`${boardId}-${actions.getBoard(boardId).lists.length}`} />
+	  			key={`${boardId}-${actions.get('boards', boardId).lists.length}`} />
 	  	)}
+	  	<button
+	  		className="new-board-btn"
+	  		onClick={() => actions.addNewBoard()}>+ New Board</button>
   	</main>;
   }
 }
@@ -59,17 +62,21 @@ class Board extends Component {
 			<div className="board">
 				<input
 					className="board__title"
-					defaultValue={title}
+					value={title}
+					onChange={ev => actions.update.boards(boardId, {
+						title: ev.target.value
+					})}
 					placeholder="(untitled)"
 				/>
 			  <section ref={listsDragDrop} className="board__items" data-board-id={boardId}>
-				{lists.map(listId =>
-				  <List
+				{lists.map(listId => {
+					const list = actions.get('lists', listId);
+				  return <List
 					  listId={listId}
-				  	key={`${listId}-${actions.getList(listId).items.length}`} // re-render whole list when items added or removed
-				  	items={actions.getList(listId).items}
-				  	title={actions.getList(listId).title} />
-				)}				
+				  	key={`${listId}-${list.items.length}`} // re-render whole list when items added or removed
+				  	items={list.items}
+				  	title={list.title} />;				
+				})}				
 			  </section>
 			  <button
 			  	className="board__new-list"
@@ -81,11 +88,6 @@ class Board extends Component {
 	}
 }
 
-const listTitleHeight = title => ({
-	height: `${Math.ceil(title.length / 27) * 1.5}rem`
-});
-	
-
 class List extends Component {
 	render() {
 		const { items, listId, title } = this.props;
@@ -95,19 +97,18 @@ class List extends Component {
 
 		return (
 			<div className="list">
-				<textarea
-					className="list__title dynamic-textarea"
-					style={listTitleHeight(title)}
-					onChange={ev => actions.updateListTitle(
+				<input
+					className="list__title"
+					onChange={ev => actions.update.lists(
 						listId,
-						ev.target.value.replace('\n', ' ')
+						{ title: ev.target.value }
 					)}
 					value={title}
 					placeholder="(untitled)"
 				/>
 			  <ul className="list__items" ref={itemsDragDrop} data-list-id={listId}>
 				{items.map(
-					itemId => <Item key={itemId} {...actions.getItem(itemId)} />
+					itemId => <Item key={itemId} {...actions.get('items', itemId)} />
 				)}
 			  </ul>
 			  <button className="list__add-item" onClick={() => actions.addItemToList(listId)}>+ Add an item</button>
@@ -120,7 +121,10 @@ const itemClassname = completed =>
 	`item__textarea ${completed ? 'item__textarea--completed' : ''}`;
 
 const itemTextHeight = text => ({
-	height: `${Math.ceil(text.length / 27 + text.split('\n').length - 1 + 0.25)}rem`
+	height: `${Math.ceil(
+		text.replace('\n', '').length / 27 +
+		1.1 * text.split('\n').length - 1 + 0.25)
+	}rem`
 });
 
 const Item = ({ id, text, completed }, { actions }) =>
@@ -129,16 +133,16 @@ const Item = ({ id, text, completed }, { actions }) =>
 		<textarea
 			className={itemClassname(completed) + ' dynamic-textarea'}
 			style={itemTextHeight(text)}
-			onChange={ev => actions.updateItem(id, ev.target.value)}
+			onChange={ev => actions.update.items(id, { text: ev.target.value })}
 			value={text}
-			placeholder="A new item..."
+			placeholder="(empty)"
 		/>
 		<input
 			className="item__checkbox"
 		  id={id}
 		  type="checkbox"
 		  checked={completed}
-		  onChange={() => actions.toggleItem(id)}
+		  onChange={() => actions.update.items(id, { completed: !completed })}
 		  />
   </li>;
 

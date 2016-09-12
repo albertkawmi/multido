@@ -4,54 +4,75 @@ const ITEM_ID = 'data-item-id';
 const LIST_ID = 'data-list-id';
 const BOARD_ID = 'data-board-id';
 
+const templates = {
+  board: {
+    id: 'board-0',
+    title: '',
+    lists: []
+  },
+  list: {
+    id: 'list-0',
+    title: '',
+    items: [] 
+  },
+  item: {
+    id: 'item-0',
+    text: '',
+    completed: false
+  }
+};
+
 export default function bindActions(app) {
+  const update = Object.keys(app.state).reduce((all, entity) => ({
+    ...all,
+    [entity]: updaterFor(entity)
+  }), {});
+
   return {
-    getBoard,
-    createList,
-    getList,
-    getItem,
+    get,
+    update,
     addItemToList,
     addListToBoard,
-    updateListTitle,
-    createItem,
-    updateItem,
-    toggleItem,
+    addNewBoard,
     handleItemDropped,
     handleListDropped
+  };
+
+  function get(type, id) {
+    return app.state[type][id];
   }
 
-  function getBoard(id) {
-    return app.state.boards[id];
-  }
-
-  function getList(id) {
-    return app.state.lists[id];
-  }
-
-  function getItem(id) {
-    return app.state.items[id];
-  }
-
-  function createItem() {
-    const id = newId('item');
+  function create(type) {
     return {
-      id,
-      text: '',
-      completed: false
+      ...templates[type],
+      id: newId(type)
     };
   }
 
-  function createList() {
-    const id = newId('list');
-    return {
-      id,
-      title: '',
-      items: []
-    };
+  function updaterFor(entity) {
+    return (id, newProps) => app.setState({
+      [entity]: {
+        ...app.state[entity],
+        [id]: {
+          ...app.state[entity][id],
+          ...newProps
+        }
+      }
+    });
+  }
+
+  function addNewBoard() {
+    const newBoard = create('board');
+    app.setState({
+      boards: {
+        ...app.state.boards,
+        [newBoard.id]: newBoard
+      }
+    });
   }
 
   function addListToBoard(boardId) {
-    const newList = createList();
+    const newList = create('list');
     app.setState({
       lists: {
         ...app.state.lists,
@@ -70,32 +91,8 @@ export default function bindActions(app) {
     })
   }
 
-  function updateItem(id, newValue) {
-    app.setState({
-      items: {
-        ...app.state.items,
-        [id]: {
-          ...app.state.items[id],
-          text: newValue
-        }
-      }
-    });
-  }
-
-  function updateListTitle(id, newValue) {
-    app.setState({
-      lists: {
-        ...app.state.lists,
-        [id]: {
-          ...app.state.lists[id],
-          title: newValue
-        }
-      }
-    });
-  }
-
   function addItemToList(listId) {
-    const newItem = createItem();
+    const newItem = create('item');
     app.setState({
       items: {
         ...app.state.items,
@@ -112,18 +109,6 @@ export default function bindActions(app) {
         }
       }
     })
-  }
-
-  function toggleItem(id) {
-    app.setState({
-      items: {
-        ...app.state.items,
-        [id]: {
-          ...app.state.items[id],
-          completed: !app.state.items[id].completed
-        }
-      }
-    });
   }
 
   function handleItemDropped(el, target, source /*, sibling */) {

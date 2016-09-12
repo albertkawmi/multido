@@ -4,7 +4,7 @@ body {
   font-family: sans-serif;
 }
 
-div, ul, li, main, section {
+div, ul, li, main, section, input {
 	box-sizing: border-box;
 }
 
@@ -19,6 +19,22 @@ div, ul, li, main, section {
 	min-height: 100vh;
 	flex-direction: vertical;
 	flex-wrap: wrap;
+}
+
+.new-board-btn {
+	border: dotted 1px silver;
+	color: silver;
+	background: white;
+	padding: 1rem 2rem;
+	font-size: 1.5rem;
+	margin: 4rem;
+	width: 80%;
+	cursor: pointer;
+}
+
+.new-board-btn:hover {
+	color: gray;
+	border-color: gray;
 }
 
 .board {
@@ -46,7 +62,7 @@ div, ul, li, main, section {
 }
 
 .board__title:focus {
-	background: rgba(0,0,0,0.1);
+	background: lightyellow;
 }
 
 .board__items {
@@ -87,18 +103,24 @@ div, ul, li, main, section {
 	margin: 2rem;
 	margin-bottom: 0.5rem;
 	min-height: 1.5rem;
-	color: silver;
+	width: 240px;
+	padding: 0 0.5rem;
+	color: gray;
 	text-align: center;
-	font-size: 1.175rem;
-	font-weight: bold;
+	font-size: 1rem;
+	background: 0;
+	border: 0;
+	text-overflow: ellipsis;
 }
 
 .list__title:focus {
 	cursor: move;	
+	background: lightyellow;
+	color: black;
 }
 
-.list__title:hover {
-	color: gray;
+.list__title::placeholder {
+	color: rgba(0,0,0,0.1);
 }
 
 .list__items {
@@ -178,14 +200,6 @@ div, ul, li, main, section {
 
 .dynamic-textarea:focus {
 	background: lightyellow;
-}
-
-.list__title.dynamic-textarea:focus {
-	background: rgba(255,255,255,0.6);
-}
-
-.list__title.dynamic-textarea::placeholder {
-	color: rgba(0,0,0,0.1);
 }
 
 .item__textarea--completed {
