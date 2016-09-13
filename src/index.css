@@ -2,6 +2,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+  background: #222;
 }
 
 div, ul, li, main, section, input {
@@ -19,22 +20,19 @@ div, ul, li, main, section, input {
 	min-height: 100vh;
 	flex-direction: vertical;
 	flex-wrap: wrap;
+	max-width: 1220px;
+	background: whitesmoke;
+	margin: 0 auto;
 }
 
 .new-board-btn {
-	border: dotted 1px silver;
+	border: 0;
 	color: silver;
-	background: white;
+	background: none;
 	padding: 1rem 2rem;
 	font-size: 1.5rem;
 	margin: 4rem;
-	width: 80%;
 	cursor: pointer;
-}
-
-.new-board-btn:hover {
-	color: gray;
-	border-color: gray;
 }
 
 .board {
@@ -48,7 +46,6 @@ div, ul, li, main, section, input {
 	font-size: 3rem;
 	font-weight: normal;
 	color: gray;
-	opacity: 0.5;
 	background: none;
 	border: 0;
 	padding: 0 0.5rem;
@@ -90,10 +87,6 @@ div, ul, li, main, section, input {
 	background: none;
 }
 
-.board__new-list:hover {
-	color: gray;
-}
-
 .list {
 	width: 300px;
 	text-align: center;
@@ -120,7 +113,7 @@ div, ul, li, main, section, input {
 }
 
 .list__title::placeholder {
-	color: rgba(0,0,0,0.1);
+	color: silver;
 }
 
 .list__items {
