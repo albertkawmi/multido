@@ -6,196 +6,196 @@ body {
 }
 
 div, ul, li, main, section, input {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 *:focus {
-	outline: none;
+  outline: none;
 }
 
 .boards {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	min-height: 100vh;
-	flex-direction: vertical;
-	flex-wrap: wrap;
-	max-width: 1220px;
-	background: whitesmoke;
-	margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  flex-direction: vertical;
+  flex-wrap: wrap;
+  max-width: 1220px;
+  background: whitesmoke;
+  margin: 0 auto;
 }
 
 .new-board-btn {
-	border: 0;
-	color: silver;
-	background: none;
-	padding: 1rem 2rem;
-	font-size: 1.5rem;
-	margin: 4rem;
-	cursor: pointer;
+  border: 0;
+  color: silver;
+  background: none;
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  margin: 4rem;
+  cursor: pointer;
 }
 
 .board {
-	width: 100%;
-	overflow: hidden;
-	position: relative;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
 }
 
 .board__title {
-	margin: 0;
-	font-size: 3rem;
-	font-weight: normal;
-	color: gray;
-	background: none;
-	border: 0;
-	padding: 0 0.5rem;
-	height: 5rem;
-	width: 80%;
-	position: relative;
-	top: 1.5rem;
-	left: 2rem;
-	display: block;
-	text-overflow: ellipsis;
+  margin: 0;
+  font-size: 3rem;
+  font-weight: normal;
+  color: gray;
+  background: none;
+  border: 0;
+  padding: 0 0.5rem;
+  height: 5rem;
+  width: 80%;
+  position: relative;
+  top: 1.5rem;
+  left: 2rem;
+  display: block;
+  text-overflow: ellipsis;
 }
 
 .board__title:focus {
-	background: lightyellow;
+  background: lightyellow;
 }
 
 .board__items {
-	display: flex;
-	align-items: flex-start;
-	justify-content: flex-start;
-	background: whitesmoke;
-	width: 100%;
-	padding: 0.5rem;
-	overflow-x: scroll;
-	margin: 0 auto;
-	min-height: 4rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background: whitesmoke;
+  width: 100%;
+  padding: 0.5rem;
+  overflow-x: scroll;
+  margin: 0 auto;
+  min-height: 4rem;
 }
 
 .board__new-list {
-	width: 100px;
-	padding: 0.5rem;
-	border: 0;
-	position: absolute;
-	top: 3rem;
-	right: 2rem;
-	color: silver;
-	font-size: 1rem;
-	cursor: pointer;
-	background: none;
+  width: 100px;
+  padding: 0.5rem;
+  border: 0;
+  position: absolute;
+  top: 3rem;
+  right: 2rem;
+  color: silver;
+  font-size: 1rem;
+  cursor: pointer;
+  background: none;
 }
 
 .list {
-	width: 300px;
-	text-align: center;
+  width: 300px;
+  text-align: center;
 }
 
 .list__title {
-	margin: 2rem;
-	margin-bottom: 0.5rem;
-	min-height: 1.5rem;
-	width: 240px;
-	padding: 0 0.5rem;
-	color: gray;
-	text-align: center;
-	font-size: 1rem;
-	background: 0;
-	border: 0;
-	text-overflow: ellipsis;
+  margin: 2rem;
+  margin-bottom: 0.5rem;
+  min-height: 1.5rem;
+  width: 240px;
+  padding: 0 0.5rem;
+  color: gray;
+  text-align: center;
+  font-size: 1rem;
+  background: 0;
+  border: 0;
+  text-overflow: ellipsis;
 }
 
 .list__title:focus {
-	cursor: move;	
-	background: lightyellow;
-	color: black;
+  cursor: move; 
+  background: lightyellow;
+  color: black;
 }
 
 .list__title::placeholder {
-	color: silver;
+  color: silver;
 }
 
 .list__items {
-	margin: 0 0.5rem;
-	padding: 0.5rem;
-	padding-top: 0;
-	list-style-type: none;
+  margin: 0 0.5rem;
+  padding: 0.5rem;
+  padding-top: 0;
+  list-style-type: none;
 }
 
 .list__add-item {
-	border: 0;
-	color: silver;
-	background: none;
-	margin: 0 2rem 0.5rem 2rem;
-	padding: 0;
-	font-size: 1rem;
-	visibility: hidden;
-	cursor: pointer;
+  border: 0;
+  color: silver;
+  background: none;
+  margin: 0 2rem 0.5rem 2rem;
+  padding: 0;
+  font-size: 1rem;
+  visibility: hidden;
+  cursor: pointer;
 }
 
 .list:hover .list__add-item {
-	visibility: visible;
+  visibility: visible;
 }
 
 .item, .item.gu-mirror {
-	position: relative;
-	min-width: 200px;
-	margin: 0.5rem;
-	padding: 0.5rem;
-	background: white;
-	display: flex;
+  position: relative;
+  min-width: 200px;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  background: white;
+  display: flex;
 }
 
 .item:first-child {
-	margin-top: 0;
+  margin-top: 0;
 }
 
 .item.gu-mirror {
-	list-style-type: none;
+  list-style-type: none;
 }
 
 .gu-mirror {
-	transform: rotate(3deg);	
+  transform: rotate(3deg);  
 }
 
 .item__handle {
-	width: 0.5rem;
-	background: silver;
-	position: absolute;
-	left: 0;
-	top: 0;
-	bottom: 0;
-	cursor: move;
-	opacity: 0.5;
+  width: 0.5rem;
+  background: silver;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  cursor: move;
+  opacity: 0.5;
 }
 
 .item:hover .item__handle {
-	opacity: 1;
+  opacity: 1;
 }
 
 .item__textarea {
-	width: 100%;
-	font-family: Helvetica, Arial, sans-serif;
-	font-size: 1rem;
-	padding: 0.5rem;
-	margin: 0 0.5rem;
-	min-height: 1rem;
+  width: 100%;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  padding: 0.5rem;
+  margin: 0 0.5rem;
+  min-height: 1rem;
 }
 
 .dynamic-textarea {
-	resize: none;
-	border: 0;
-	flex: 1;
-	overflow: hidden;
-	background: none;
+  resize: none;
+  border: 0;
+  flex: 1;
+  overflow: hidden;
+  background: none;
 }
 
 .dynamic-textarea:focus {
-	background: lightyellow;
+  background: lightyellow;
 }
 
 .item__textarea--completed {
-	color: gray;
-	text-decoration: line-through;
+  color: gray;
+  text-decoration: line-through;
 }

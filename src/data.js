@@ -1,17 +1,17 @@
 // dummy data
 export default {
-	boards: {
-		board1: {
-			id: 'board1',
-			title: 'My First Board',
-			lists: ['list1', 'list2', 'list3']
-		},
-		board2: {
-			id: 'board2',
-			title: 'Another Board',
-			lists: ['list4', 'list5', 'list6']
-		}
-	},
+  boards: {
+    board1: {
+      id: 'board1',
+      title: 'My First Board',
+      lists: ['list1', 'list2', 'list3']
+    },
+    board2: {
+      id: 'board2',
+      title: 'Another Board',
+      lists: ['list4', 'list5', 'list6']
+    }
+  },
   lists: {
     list1: { id: 'list1', title: 'The first board has a very long title, too...', items: ['item1', 'item2', 'item3'] },
     list2: { id: 'list2', title: 'List 2', items: ['item4', 'item5', 'item6'] },
