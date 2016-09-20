@@ -2,11 +2,13 @@ import React, { Component, PropTypes } from 'react';
 import initialState from './data';
 import bindActions from './actions';
 import dragDrop from './dragDrop';
+import DragAndDrop from './DragAndDrop';
 
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = initialState;
+    this.update = this.update.bind(this);
   }
   getChildContext() {
     return {
@@ -17,8 +19,26 @@ export default class App extends Component {
   componentWillUpdate(nextProps, nextState) {
     console.log(nextState);
   }
+  update({ source, target }) {
+    const newLists = {...this.state.lists};
+    newLists[target.id].items = target.items;
+    if (source.id !== target.id) {
+      newLists[source.id].items = source.items;
+    }
+    this.setState({ lists: newLists });
+  }
   render() {
-    return <Boards boards={this.state.boards} />;
+    // return <Boards boards={this.state.boards} />;
+
+    return <DragAndDrop
+      lists={this.state.lists}
+      onChange={this.update}
+      handleClassName="item__handle"
+      ItemComponent={Item}
+      itemClassName="item"
+      ListComponent={List}
+      listClassName="list__items"
+    />;
   }
 }
 
@@ -85,13 +105,14 @@ class Board extends Component {
 
 class List extends Component {
   render() {
-    const { items, listId, title } = this.props;
-    const { actions, dragDrop } = this.context;
+    const { actions } = this.context;
+    const { listId } = this.props;
+    const { items, title } = actions.get('lists', listId);
     const itemsDragDrop = el =>
       dragDrop.items.containers.push(el);
 
     return (
-      <div className="list">
+      <div>
         <input
           className="list__title"
           onChange={ev => actions.update.lists(
@@ -101,11 +122,7 @@ class List extends Component {
           value={title}
           placeholder="(untitled)"
         />
-        <ul className="list__items" ref={itemsDragDrop} data-list-id={listId}>
-        {items.map(
-          itemId => <Item key={itemId} {...actions.get('items', itemId)} />
-        )}
-        </ul>
+        {this.props.children}
         <button className="list__add-item" onClick={() => actions.addItemToList(listId)}>+ Add an item</button>
       </div>
     );
@@ -122,8 +139,9 @@ const itemTextHeight = text => ({
   }rem`
 });
 
-const Item = ({ id, text, completed }, { actions }) =>
-  <li className="item" data-item-id={id}>
+const Item = ({ itemId }, { actions }) => {
+  const { id, text, completed } = actions.get('items', itemId);
+  return <div>
     <span className="item__handle" />
     <textarea
       className={itemClassname(completed) + ' dynamic-textarea'}
@@ -139,7 +157,8 @@ const Item = ({ id, text, completed }, { actions }) =>
       checked={completed}
       onChange={() => actions.update.items(id, { completed: !completed })}
       />
-  </li>;
+  </div>;
+}
 
 const CONTEXT = {
   actions: PropTypes.object,
