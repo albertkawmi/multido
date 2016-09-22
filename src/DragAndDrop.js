@@ -6,7 +6,6 @@ export default class DragAndDrop extends Component {
     const { handleClassName } = this.props;
     this.droppable = Dragula([], {
       accepts(el, target, source, sibling) {
-        console.log(target);
         return el.getAttribute('data-draggable-id')
           && target.getAttribute('data-container-id');
       },

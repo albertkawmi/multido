@@ -1,9 +1,5 @@
 import uuid from 'uuid';
 
-const ITEM_ID = 'data-item-id';
-const LIST_ID = 'data-list-id';
-const BOARD_ID = 'data-board-id';
-
 const templates = {
   board: {
     id: 'board-0',
@@ -109,54 +105,6 @@ export default function bindActions(app) {
         }
       }
     })
-  }
-
-  function handleItemDropped(el, target, source /*, sibling */) {
-    if (!target || !source) return;
-    // update the target list of ids
-    const targetId = target.getAttribute(LIST_ID);
-    const updatedTargetItems = getItems(target, ITEM_ID);
-    // update the source list of ids
-    const sourceId = source.getAttribute(LIST_ID);
-    const updatedSourceItems = getItems(source, ITEM_ID);
-    // update state with the new lists
-    app.setState({
-      lists: {
-        ...app.state.lists,
-        [sourceId]: {
-          ...app.state.lists[sourceId],
-          items: updatedSourceItems
-        },
-        [targetId]: {
-          ...app.state.lists[targetId],
-          items: updatedTargetItems
-        }
-      }
-    });
-  }
-
-  function handleListDropped(el, target, source) {
-    if (!target || !source) return;
-    // update the target board
-    const targetId = target.getAttribute(BOARD_ID);
-    const updatedTargetItems = getItems(target, LIST_ID);
-    // update the source board
-    const sourceId = source.getAttribute(BOARD_ID);
-    const updatedSourceItems = getItems(source, LIST_ID);
-    // update state with the new boards
-    app.setState({
-      boards: {
-        ...app.state.boards,
-        [sourceId]: {
-          ...app.state.boards[sourceId],
-          lists: updatedSourceItems
-        },
-        [targetId]: {
-          ...app.state.boards[targetId],
-          lists: updatedTargetItems
-        },
-      }
-    });
   }
 }
 
