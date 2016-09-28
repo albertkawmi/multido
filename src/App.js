@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import initialState from './data';
 import bindActions from './actions';
-import dragDrop from './dragDrop';
 import DragAndDrop from './DragAndDrop';
 
 export default class App extends Component {
@@ -12,8 +11,7 @@ export default class App extends Component {
   }
   getChildContext() {
     return {
-      actions: bindActions(this),
-      dragDrop
+      actions: bindActions(this)
     };
   }
   componentWillUpdate(nextProps, nextState) {
@@ -28,8 +26,6 @@ export default class App extends Component {
     this.setState({ lists: newLists });
   }
   render() {
-    // return <Boards boards={this.state.boards} />;
-
     return <DragAndDrop
       lists={this.state.lists}
       onChange={this.update}

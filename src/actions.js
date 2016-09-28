@@ -29,9 +29,7 @@ export default function bindActions(app) {
     update,
     addItemToList,
     addListToBoard,
-    addNewBoard,
-    handleItemDropped,
-    handleListDropped
+    addNewBoard
   };
 
   function get(type, id) {
