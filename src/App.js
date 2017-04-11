@@ -1,154 +1,98 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import initialState from './data';
-import bindActions from './actions';
-import dragDrop from './dragDrop';
+import { dndContainer, dndElement } from './dragDrop';
 
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = initialState;
   }
-  getChildContext() {
-    return {
-      actions: bindActions(this),
-      dragDrop
-    };
-  }
   componentWillUpdate(nextProps, nextState) {
     console.log(nextState);
   }
-  render() {
-    return <Boards boards={this.state.boards} />;
+  handleItemDrop({ source, target }) {
+    this.setState({
+      lists: {
+        ...this.state.lists,
+        [source.id]: {
+          ...this.state.lists[source.id],
+          items: source.elements
+        },
+        [target.id]: {
+          ...this.state.lists[target.id],
+          items: target.elements
+        }
+      }
+    });
   }
-}
+  handleListDrop() {
 
-class Boards extends Component {  
-  componentWillMount() {
-    const { dragDrop, actions } = this.context;
-    dragDrop.items.on('drop', actions.handleItemDropped);
-    dragDrop.lists.on('drop', actions.handleListDropped);
   }
   render() {
-    const { boards } = this.props;
-    const { actions } = this.context;
-
-    return <main className="boards">
-      {Object.keys(boards).map(
-        boardId => <Board
-          {...actions.get('boards', boardId)}
-          boardId={boardId}
-          key={`${boardId}-${actions.get('boards', boardId).lists.length}`} />
-      )}
-      <button
-        className="new-board-btn"
-        onClick={() => actions.addNewBoard()}>+ New Board</button>
-    </main>;
+    const { lists, items } = this.state;
+    const { list1, list2 } = lists;
+    return (
+      <DndBoard onDrop={this.handleListDrop.bind(this)}>
+        <DraggableList {...list1} onDrop={this.handleItemDrop.bind(this)}>
+          {list1.items.map(itemId => {
+            const item = items[itemId];
+            return (
+              <DraggableListItem {...item} key={item.id} />
+            );
+          })}
+        </DraggableList>
+        <DraggableList {...list2} onDrop={this.handleItemDrop.bind(this)}>
+          {list2.items.map(itemId => {
+            const item = items[itemId];
+            return (
+              <DraggableListItem {...item} key={item.id} />
+            );
+          })}
+        </DraggableList>
+      </DndBoard>
+    );
   }
 }
 
 class Board extends Component {
   render() {
-    const { lists, title, boardId } = this.props;
-    const { actions, dragDrop } = this.context;
-    const listsDragDrop = el =>
-      dragDrop.lists.containers.push(el);
-
-    return (
-      <div className="board">
-        <input
-          className="board__title"
-          value={title}
-          onChange={ev => actions.update.boards(boardId, {
-            title: ev.target.value
-          })}
-          placeholder="(untitled)"
-        />
-        <section ref={listsDragDrop} className="board__items" data-board-id={boardId}>
-        {lists.map(listId => {
-          const list = actions.get('lists', listId);
-          return <List
-            listId={listId}
-            key={`${listId}-${list.items.length}`} // re-render whole list when items added or removed
-            items={list.items}
-            title={list.title} />;        
-        })}       
-        </section>
-        <button
-          className="board__new-list"
-          onClick={() => actions.addListToBoard(boardId)} >
-          + New List
-        </button>
-      </div>
-    );
+    return <div>{this.props.children}</div>;
   }
 }
+
+const DndBoard = dndContainer({
+  containerType: 'board',
+  acceptType: 'list',
+  direction: 'vertical'
+})(Board);
 
 class List extends Component {
   render() {
-    const { items, listId, title } = this.props;
-    const { actions, dragDrop } = this.context;
-    const itemsDragDrop = el =>
-      dragDrop.items.containers.push(el);
-
     return (
-      <div className="list">
-        <input
-          className="list__title"
-          onChange={ev => actions.update.lists(
-            listId,
-            { title: ev.target.value }
-          )}
-          value={title}
-          placeholder="(untitled)"
-        />
-        <ul className="list__items" ref={itemsDragDrop} data-list-id={listId}>
-        {items.map(
-          itemId => <Item key={itemId} {...actions.get('items', itemId)} />
-        )}
-        </ul>
-        <button className="list__add-item" onClick={() => actions.addItemToList(listId)}>+ Add an item</button>
-      </div>
+      <ul className="list">
+        {this.props.children}
+      </ul>
     );
   }
 }
 
-const itemClassname = completed =>
-  `item__textarea ${completed ? 'item__textarea--completed' : ''}`;
+const ContainerList = dndContainer({
+  containerType: 'list',
+  acceptType: 'item',
+  // handleClassName: 'item-handle',
+  direction: 'vertical'
+})(List);
 
-const itemTextHeight = text => ({
-  height: `${Math.ceil(
-    text.replace('\n', '').length / 27 +
-    1.1 * text.split('\n').length - 1 + 0.25)
-  }rem`
-});
+const DraggableList = dndElement({
+  type: 'list'
+})(ContainerList);
 
-const Item = ({ id, text, completed }, { actions }) =>
-  <li className="item" data-item-id={id}>
-    <span className="item__handle" />
-    <textarea
-      className={itemClassname(completed) + ' dynamic-textarea'}
-      style={itemTextHeight(text)}
-      onChange={ev => actions.update.items(id, { text: ev.target.value })}
-      value={text}
-      placeholder="(empty)"
-    />
-    <input
-      className="item__checkbox"
-      id={id}
-      type="checkbox"
-      checked={completed}
-      onChange={() => actions.update.items(id, { completed: !completed })}
-      />
-  </li>;
-
-const CONTEXT = {
-  actions: PropTypes.object,
-  dragDrop: PropTypes.object
+class Item extends Component {
+  render() {
+    return <li className="item">{this.props.text}</li>
+  }
 }
 
-App.childContextTypes = CONTEXT;
-Boards.contextTypes = CONTEXT;
-Board.contextTypes = CONTEXT;
-List.contextTypes = CONTEXT;
-Item.contextTypes = CONTEXT;
-
+const DraggableListItem = dndElement({
+  type: 'item'
+})(Item);

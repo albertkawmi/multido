@@ -89,7 +89,9 @@ div, ul, li, main, section, input {
 
 .list {
   width: 300px;
-  text-align: center;
+  overflow: auto;
+  border: solid 1px red
+  /*text-align: center;*/
 }
 
 .list__title {
@@ -107,7 +109,7 @@ div, ul, li, main, section, input {
 }
 
 .list__title:focus {
-  cursor: move; 
+  cursor: move;
   background: lightyellow;
   color: black;
 }
@@ -156,7 +158,7 @@ div, ul, li, main, section, input {
 }
 
 .gu-mirror {
-  transform: rotate(3deg);  
+  transform: rotate(3deg);
 }
 
 .item__handle {
