@@ -39,6 +39,7 @@ div, ul, li, main, section, input {
   width: 100%;
   overflow: hidden;
   position: relative;
+  background: green;
 }
 
 .board__title {
@@ -92,6 +93,12 @@ div, ul, li, main, section, input {
   overflow: auto;
   border: solid 1px red
   /*text-align: center;*/
+}
+
+.list__handle {
+  background: red;
+  width: 30px;
+  height: 30px;
 }
 
 .list__title {

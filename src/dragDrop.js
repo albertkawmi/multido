@@ -86,6 +86,6 @@ export const dndElement = ({
 
 function getElements(el, attr) {
   return Array
-    .from(el.querySelectorAll(`[${attr}]`))
+    .from(el.querySelectorAll(`:scope > [${attr}]`))
     .map(el => el.getAttribute(attr));
 }
