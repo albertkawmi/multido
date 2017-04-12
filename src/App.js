@@ -10,28 +10,17 @@ export default class App extends Component {
   componentWillUpdate(nextProps, nextState) {
     console.log(nextState);
   }
-  handleItemDrop({ source, target }) {
-    this.setState({
-      lists: {
-        ...this.state.lists,
+  handleDrop(parentKey, childKey) {
+    return ({ source, target }) => this.setState({
+      [parentKey]: {
+        ...this.state[parentKey],
         [source.id]: {
-          ...this.state.lists[source.id],
-          items: source.elements
+          ...this.state[parentKey][source.id],
+          [childKey]: source.elements
         },
         [target.id]: {
-          ...this.state.lists[target.id],
-          items: target.elements
-        }
-      }
-    });
-  }
-  handleListDrop({ source, target }) {
-    this.setState({
-      boards: {
-        ...this.state.boards,
-        board1: {
-          ...this.state.boards.board1,
-          lists: source.elements
+          ...this.state[parentKey][target.id],
+          [childKey]: target.elements
         }
       }
     });
@@ -40,10 +29,10 @@ export default class App extends Component {
     const { boards, lists, items } = this.state;
     const { board1: board } = boards;
     return (
-      <DndBoard onDrop={this.handleListDrop.bind(this)}>
+      <DndBoard onDrop={this.handleDrop('boards', 'lists')}>
         {board.lists.map(listId => {
           const list = lists[listId];
-          return list && <DraggableList {...list} key={list.id} onDrop={this.handleItemDrop.bind(this)}>
+          return list && <DraggableList {...list} key={list.id} onDrop={this.handleDrop('lists', 'items')}>
             {list.items.map(itemId => {
               const item = items[itemId];
               return (
@@ -57,11 +46,7 @@ export default class App extends Component {
   }
 }
 
-class Board extends Component {
-  render() {
-    return <div className="board">{this.props.children}</div>;
-  }
-}
+const Board = ({ children }) => <div className="board">{children}</div>;
 
 const DndBoard = dndContainer({
   containerType: 'board',
@@ -70,15 +55,7 @@ const DndBoard = dndContainer({
   direction: 'vertical'
 })(Board);
 
-class List extends Component {
-  render() {
-    return (
-      <ul className="list">
-        {this.props.children}
-      </ul>
-    );
-  }
-}
+const List = ({ children }) => <ul className="list">{children}</ul>;
 
 const ContainerList = dndContainer({
   containerType: 'list',
@@ -87,30 +64,23 @@ const ContainerList = dndContainer({
   direction: 'vertical'
 })(List);
 
-class ListWithHandle extends Component {
-  render() {
-    return (
-      <div>
-        <div className="list__handle" />
-        <ContainerList {...this.props} />
-      </div>
-    );
-  }
-}
+const ListWithHandle = props => (
+  <div>
+    <div className="list__handle" />
+    <ContainerList {...props} />
+  </div>
+);
 
 const DraggableList = dndElement({
   type: 'list',
 })(ListWithHandle);
 
-
-class Item extends Component {
-  render() {
-    return <li className="item">
-      <span className="item__handle" />
-      {this.props.text}
-    </li>
-  }
-}
+const Item = ({ text }) => (
+  <li className="item">
+    <span className="item__handle" />
+    {text}
+  </li>
+);
 
 const DraggableListItem = dndElement({
   type: 'item'

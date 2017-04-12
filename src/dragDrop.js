@@ -14,9 +14,10 @@ export const dndContainer = ({
   containerType,
   acceptType,
   handleClassName,
-  direction = 'vertical',
-  onDrop
-}) => (WrappedComponent) => {
+  direction = 'vertical'
+}) => (ComponentToWrap) => {
+  const WrappedComponent = ensureClassComponent(ComponentToWrap);
+
   if (!dndStore[containerType]) {
     dndStore[containerType] = Dragula([], {
       accepts(el, target) {
@@ -31,36 +32,44 @@ export const dndContainer = ({
     });
   }
   return class extends Component {
+    storeIndex = 0
+
     componentWillMount() {
       dndStore[containerType].on('drop', (el, target, source) => {
         if (!target || !source) return;
-        // update the target list of ids
+        // update the list of ids in the target container
         const targetId = target.getAttribute(CONTAINER_ID);
-        const updatedTargetElements = getElements(target, DRAGGABLE_ID);
-        // update the source list of ids
+        const updatedTargetElements = getAttrValues(DRAGGABLE_ID, target);
+        // update the list of ids in the source container (if different to target)
         const sourceId = source.getAttribute(CONTAINER_ID);
         const updatedSourceElements = sourceId === targetId
           ? updatedTargetElements
-          : getElements(source, DRAGGABLE_ID);
-        // update state with the new lists
+          : getAttrValues(DRAGGABLE_ID, source);
+
         this.props.onDrop({
           source: { id: sourceId, elements: updatedSourceElements },
           target: { id: targetId, elements: updatedTargetElements }
         });
       })
     }
+    componentWillUnmount() {
+      dndStore[containerType].containers.splice(this.storeIndex, 1);
+    }
     rootRef(component) {
       const el = ReactDOM.findDOMNode(component);
       if (!el) return;
       el.setAttribute(CONTAINER_TYPE, containerType)
       el.setAttribute(CONTAINER_ID, this.props[idProp]);
+      this.storeIndex = dndStore[containerType].containers.length;
       dndStore[containerType].containers.push(el);
     }
     render() {
-      return <WrappedComponent
-        ref={this.rootRef.bind(this)}
-        key={`${containerType}-${this.props.children.length}`}
-        {...this.props} />
+      return (
+        <WrappedComponent
+          {...this.props}
+          ref={this.rootRef.bind(this)}
+          key={`${containerType}-${this.props.children.length}`} />
+      );
     }
   };
 }
@@ -68,7 +77,9 @@ export const dndContainer = ({
 export const dndElement = ({
   idProp = 'id',
   type
-}) => (WrappedComponent) => {
+}) => (ComponentToWrap) => {
+  const WrappedComponent = ensureClassComponent(ComponentToWrap);
+
   return class extends Component {
     rootRef(component) {
       const el = ReactDOM.findDOMNode(component);
@@ -84,8 +95,41 @@ export const dndElement = ({
   }
 };
 
-function getElements(el, attr) {
-  return Array
-    .from(el.querySelectorAll(`:scope > [${attr}]`))
+function getAttrValues(attr, el) {
+  // an ID attribute is used to only select direct child elements
+  const originalId = el.getAttribute('id');
+  let tempId;
+  if (!originalId) {
+    tempId = `TEMP_ID_${Date.now()}`
+    el.setAttribute('id', tempId);
+  }
+
+  // find matching elements and map to the required attr
+  const scopeId = originalId || tempId;
+  const matchingAttrs = Array
+    .from(el.querySelectorAll(`#${scopeId} > [${attr}]`))
     .map(el => el.getAttribute(attr));
+
+  // remove the tempId, if needed
+  if (!originalId) el.removeAttribute('id');
+
+  return matchingAttrs;
+}
+
+/**
+ * This is needed so that we can attach a ref to get the root DOM node
+ * for drag-and-drop purposes
+ */
+function ensureClassComponent(ComponentToWrap) {
+  const isStateless = typeof ComponentToWrap.prototype.render !== 'function';
+
+  return isStateless
+    ? convertToClass(ComponentToWrap)
+    : ComponentToWrap;
+}
+
+function convertToClass(StatelessComponent) {
+  return class extends Component {
+    render = () => <StatelessComponent {...this.props} />;
+  };
 }
