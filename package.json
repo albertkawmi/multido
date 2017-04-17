@@ -11,6 +11,7 @@
     "react-dragula": "^1.1.16",
     "react-redux": "^5.0.4",
     "redux": "^3.6.0",
+    "redux-crud": "^3.0.5",
     "redux-thunk": "^2.2.0",
     "uuid": "^2.0.2"
   },
