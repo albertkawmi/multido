@@ -1,22 +1,5 @@
 import uuid from 'uuid';
-
-const templates = {
-  board: {
-    id: 'bd',
-    title: '',
-    lists: []
-  },
-  list: {
-    id: 'ls',
-    title: '',
-    items: []
-  },
-  item: {
-    id: 'i',
-    text: '',
-    completed: false
-  }
-};
+import { templates } from '../config';
 
 export default function bindActions(app) {
   const update = Object.keys(app.state).reduce((all, entity) => ({
