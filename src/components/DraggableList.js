@@ -1,7 +1,9 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { dndContainer, dndElement } from '../dragDrop';
-import { context } from '../config';
 import DraggableItem from './DraggableItem';
+import * as actions from '../actions';
+import { handleDrop } from '../actions/dragDrop';
 
 const Items = ({ children }) => <ul className="list__items">{children}</ul>;
 
@@ -12,18 +14,19 @@ const DropItems = dndContainer({
   direction: 'vertical'
 })(Items);
 
-const List = ({ id: listId, title, items: itemIds }, { actions }) => {
-  const state = actions.getState();
-  const items = itemIds.map(itemId => state.items[itemId]);
-  const onItemDrop = actions.handleDrop('lists', 'items');
+const List = ({
+  id: listId,
+  title,
+  items,
+  onItemDrop,
+  onItemCreated,
+  onListTitleChange
+}) => {
   return (
     <div className="list">
       <input
         className="list__title"
-        onChange={ev => actions.update.lists(
-          listId,
-          { title: ev.target.value }
-        )}
+        onChange={onListTitleChange}
         value={title}
         placeholder="(untitled)"
       />
@@ -34,17 +37,35 @@ const List = ({ id: listId, title, items: itemIds }, { actions }) => {
       </DropItems>
       <button
         className="list__add-item"
-        onClick={() => actions.addItemToList(listId)}>
+        onClick={onItemCreated}>
         + Add an item
       </button>
     </div>
   );
 }
 
-List.contextTypes = context;
-
 const DraggableList = dndElement({
   type: 'list',
 })(List);
 
-export default DraggableList;
+const ConnectedDraggableList = props => {
+  const { updateList, ...otherProps } = props;
+  const onListTitleChange = ev => updateList({
+    ...props,
+    title: ev.target.value
+  });
+  const onItemCreated = () => updateList({});
+};
+
+const mapStateToProps = (state, ownProps) => ({
+  items: ownProps.items.map(itemId => state.items[itemId])
+});
+
+const mapDispatchToProps = dispatch => ({
+  onItemDrop: dropInfo => dispatch(
+    handleDrop('lists', 'items')(dropInfo)
+  ),
+  updateList: list => dispatch(actions.lists.updateSuccess(list))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ConnectedDraggableList);

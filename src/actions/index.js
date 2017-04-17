@@ -1,5 +1,10 @@
 import uuid from 'uuid';
 import { templates } from '../config';
+import crud from 'redux-crud';
+
+export const boards = crud.actionCreatorsFor('boards');
+export const lists = crud.actionCreatorsFor('lists');
+export const items = crud.actionCreatorsFor('items');
 
 export default function bindActions(app) {
   const update = Object.keys(app.state).reduce((all, entity) => ({

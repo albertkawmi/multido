@@ -1,6 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { dndElement } from '../dragDrop';
 import { context } from '../config';
+import * as actions from '../actions';
 
 const itemClassname = completed =>
   `item__textarea ${completed ? 'item__textarea--completed' : ''}`;
@@ -12,13 +14,13 @@ const itemTextHeight = text => ({
   }rem`
 });
 
-const Item = ({ id, text, completed }, { actions }) => (
+const Item = ({ id, text, completed, updateText, toggleCompleted }) => (
   <li className="item">
     <span className="item__handle" />
     <textarea
       className={itemClassname(completed) + ' dynamic-textarea'}
       style={itemTextHeight(text)}
-      onChange={ev => actions.update.items(id, { text: ev.target.value })}
+      onChange={updateText}
       value={text}
       placeholder="(empty)"
     />
@@ -27,7 +29,7 @@ const Item = ({ id, text, completed }, { actions }) => (
       id={id}
       type="checkbox"
       checked={completed}
-      onChange={() => actions.update.items(id, { completed: !completed })}
+      onChange={toggleCompleted}
       />
   </li>
 );
@@ -38,4 +40,27 @@ const DraggableItem = dndElement({
   type: 'item'
 })(Item);
 
-export default DraggableItem;
+const mapDispatchToProps = dispatch => ({
+  updateItem: item => dispatch(actions.items.updateSuccess(item))
+});
+
+const ConnectedDraggableItem = (props) => {
+  const { updateItem, ...otherProps } = props;
+  const toggleCompleted = () => updateItem({
+    ...props,
+    completed: !props.completed
+  });
+  const updateText = ev => updateItem({
+    ...props,
+    text: ev.target.value
+  });
+  return <DraggableItem {...otherProps}
+    updateText={updateText}
+    toggleCompleted={toggleCompleted}
+    />;
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(ConnectedDraggableItem);
