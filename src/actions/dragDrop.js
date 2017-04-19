@@ -1,22 +1,36 @@
-import * as actions from '../actions';
+import { updateFor } from './crud';
 
 export function createDropHandler(parentKey, childKey) {
   return ({ source, target }) => (dispatch, getState) => {
     const parent = getState()[parentKey];
+    const existingSource = parent[source.id];
     const updatedSource = {
-      [source.id]: {
-        ...parent[source.id],
-        [childKey]: source.elements
-      }
+      ...existingSource,
+      [childKey]: source.elements
     };
+    const existingTarget = parent[target.id];
     const updatedTarget = {
-        [target.id]: {
-          ...parent[target.id],
-          [childKey]: target.elements
-        }
+      ...existingTarget,
+      [childKey]: target.elements
     };
-    const action = actions[parentKey].updateSuccess;
-    if (source.id) dispatch(action(updatedSource));
-    if (target.id) dispatch(action(updatedTarget));
+    const exSourceCompare = existingSource[childKey].toString();
+    const updSourceCompare = updatedSource[childKey].toString();
+    const exTargetCompare = existingTarget[childKey].toString();
+    const updTargetCompare = updatedTarget[childKey].toString();
+
+    const shouldUpdateSource = source.id
+      && exSourceCompare !== updSourceCompare;
+
+    const shouldUpdateTarget = target.id
+      && target.id !== source.id
+      && exTargetCompare !== updTargetCompare;
+
+    try {
+      const update = updateFor(parentKey);
+      if (shouldUpdateSource) update(updatedSource)(dispatch, getState);
+      if (shouldUpdateTarget) update(updatedTarget)(dispatch, getState);
+    } catch (error) {
+      console.error(error);
+    }
   };
 }

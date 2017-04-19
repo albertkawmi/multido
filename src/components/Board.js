@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { dndContainer } from '../dragDrop';
-import DraggableList from './DraggableList';
+import List from './List';
 import { createDropHandler } from '../actions/dragDrop';
 
 const ContainerBoard = ({ children }) => <section className="board__items">{children}</section>;
 
 const DndBoard = dndContainer({
-  containerType: 'board',
-  acceptType: 'list',
+  containerType: 'boards',
+  acceptType: 'lists',
   handleClassName: 'list__title',
   direction: 'horizontal'
 })(ContainerBoard);
@@ -24,7 +24,7 @@ const Board = ({ title, lists, id: boardId, onListDrop, onTitleChange, onListCre
       />
       <DndBoard id={boardId} onDrop={onListDrop}>
         {lists.map(
-          list => <DraggableList {...list} key={list.id} />
+          list => <List {...list} key={list.id} />
         )}
       </DndBoard>
       <button

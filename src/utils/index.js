@@ -7,3 +7,11 @@ export function noTouch() {
         document.body.classList.add('no-touch');
     }
 }
+
+export function plural(str) {
+    return [
+        str,
+        /s$/.test(str) && 'e',
+        's'
+    ].filter(Boolean).join('');
+}

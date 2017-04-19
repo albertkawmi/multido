@@ -5,19 +5,25 @@ export const context = {
 };
 
 export const templates = {
-  board: {
+  boards: {
     id: 'bd',
     title: '',
     lists: []
   },
-  list: {
+  lists: {
     id: 'ls',
     title: '',
     items: []
   },
-  item: {
+  items: {
     id: 'i',
     text: '',
     completed: false
   }
 };
+
+export const parent = {
+  items: 'lists',
+  lists: 'boards',
+  boards: 'spaces'
+}
