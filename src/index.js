@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Boards from './components/Boards';
+import App from './components/Test';
 import './index.css';
 import '../node_modules/react-dragula/dist/dragula.css';
 import sampleData from '../data/sample.json';
@@ -23,16 +23,16 @@ const rootReducer = combineReducers(reducers);
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
-    rootReducer,
-    preloadedState,
-    composeEnhancers(
-        applyMiddleware(thunk)
-    )
+  rootReducer,
+  preloadedState,
+  composeEnhancers(
+    applyMiddleware(thunk)
+  )
 );
 
 ReactDOM.render(
   <Provider store={store}>
-    <Boards />
+    <App />
   </Provider>,
   document.getElementById('root')
 );

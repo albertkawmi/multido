@@ -1,7 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { dndContainer } from '../dragDrop';
-import { context } from '../config';
 import DraggableList from './DraggableList';
+import { createDropHandler } from '../actions/dragDrop';
 
 const ContainerBoard = ({ children }) => <section className="board__items">{children}</section>;
 
@@ -12,18 +13,13 @@ const DndBoard = dndContainer({
   direction: 'horizontal'
 })(ContainerBoard);
 
-const Board = ({ title, lists: listIds, id: boardId }, { actions }) => {
-  const state = actions.getState();
-  const onListDrop = actions.handleDrop('boards', 'lists');
-  const lists = listIds.map(listId => state.lists[listId]);
+const Board = ({ title, lists, id: boardId, onListDrop, onTitleChange, onListCreated }) => {
   return (
     <div className="board">
       <input
         className="board__title"
         value={title}
-        onChange={ev => actions.update.boards(boardId, {
-          title: ev.target.value
-        })}
+        onChange={onTitleChange}
         placeholder="(untitled)"
       />
       <DndBoard id={boardId} onDrop={onListDrop}>
@@ -33,13 +29,17 @@ const Board = ({ title, lists: listIds, id: boardId }, { actions }) => {
       </DndBoard>
       <button
         className="board__new-list"
-        onClick={() => actions.addListToBoard(boardId)} >
+        onClick={onListCreated} >
         + New List
       </button>
     </div>
   );
 }
 
-Board.contextTypes = context;
+const mapDispatchToProps = {
+  onListDrop: createDropHandler('boards', 'lists'),
+  onTitleChange: () => {},
+  onListCreated: () => {}
+};
 
-export default Board;
+export default connect(null, mapDispatchToProps)(Board);

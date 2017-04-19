@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { dndElement } from '../dragDrop';
 import { context } from '../config';
-import * as actions from '../actions';
+import actions from '../actions/items';
 
 const itemClassname = completed =>
   `item__textarea ${completed ? 'item__textarea--completed' : ''}`;
@@ -40,9 +40,9 @@ const DraggableItem = dndElement({
   type: 'item'
 })(Item);
 
-const mapDispatchToProps = dispatch => ({
-  updateItem: item => dispatch(actions.items.updateSuccess(item))
-});
+const mapDispatchToProps = {
+  updateItem: actions.updateSuccess
+};
 
 const ConnectedDraggableItem = (props) => {
   const { updateItem, ...otherProps } = props;

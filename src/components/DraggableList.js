@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { dndContainer, dndElement } from '../dragDrop';
 import DraggableItem from './DraggableItem';
-import * as actions from '../actions';
-import { handleDrop } from '../actions/dragDrop';
+import actions from '../actions/lists';
+import { createDropHandler } from '../actions/dragDrop';
 
 const Items = ({ children }) => <ul className="list__items">{children}</ul>;
 
@@ -32,7 +32,7 @@ const List = ({
       />
       <DropItems id={listId} onDrop={onItemDrop} >
         {items.map(
-          item => <DraggableItem {...item} key={item.id} />
+          item => item && <DraggableItem {...item} key={item.id} />
         )}
       </DropItems>
       <button
@@ -50,22 +50,23 @@ const DraggableList = dndElement({
 
 const ConnectedDraggableList = props => {
   const { updateList, ...otherProps } = props;
-  const onListTitleChange = ev => updateList({
-    ...props,
-    title: ev.target.value
-  });
-  const onItemCreated = () => updateList({});
+  const handlers = {
+    onListTitleChange: ev => updateList({
+      ...props,
+      title: ev.target.value
+    }),
+    onItemCreated: () => updateList({})
+  }
+  return <DraggableList {...otherProps} {...handlers} />;
 };
 
 const mapStateToProps = (state, ownProps) => ({
   items: ownProps.items.map(itemId => state.items[itemId])
 });
 
-const mapDispatchToProps = dispatch => ({
-  onItemDrop: dropInfo => dispatch(
-    handleDrop('lists', 'items')(dropInfo)
-  ),
-  updateList: list => dispatch(actions.lists.updateSuccess(list))
-});
+const mapDispatchToProps = {
+  onItemDrop: createDropHandler('lists', 'items'),
+  updateList: actions.updateSuccess
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConnectedDraggableList);
