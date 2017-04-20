@@ -11,7 +11,11 @@ const itemTextHeight = text => ({
   }rem`
 });
 
-export const Item = ({ id, text, completed, onTextChange, onToggleCompleted }) => (
+export const Item = ({
+  item: { id, text, completed },
+  onTextChange,
+  onToggleCompleted
+}) =>
   <li className="item">
     <span className="item__handle" />
     <textarea
@@ -29,7 +33,6 @@ export const Item = ({ id, text, completed, onTextChange, onToggleCompleted }) =
       onChange={onToggleCompleted}
       />
   </li>
-);
 
 const DraggableItem = dndElement({
   type: 'items'

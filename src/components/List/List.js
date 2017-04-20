@@ -14,6 +14,7 @@ const DropItems = dndContainer({
 const List = ({
   id: listId,
   title,
+  // TODO: fix this confusing API
   items: itemIds,
   listItems: items,
   onItemDrop,
@@ -30,7 +31,7 @@ const List = ({
       />
       <DropItems id={listId} onDrop={onItemDrop} >
         {items.map(
-          item => <Item {...item} key={item.id} />
+          item => <Item item={item} id={item.id} key={item.id} />
         )}
       </DropItems>
       <button

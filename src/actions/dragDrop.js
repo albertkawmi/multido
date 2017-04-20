@@ -1,6 +1,6 @@
 import { updateFor } from './crud';
 
-export function createDropHandler(parentKey, childKey) {
+function createDropHandler(parentKey, childKey) {
   return ({ source, target }) => (dispatch, getState) => {
     const parent = getState()[parentKey];
 
@@ -15,7 +15,7 @@ export function createDropHandler(parentKey, childKey) {
       ...existingTarget,
       [childKey]: target.elements
     };
-
+    // TODO: move shouldUpdate logic into dragDrop HOC
     const exSourceCompare = existingSource[childKey].toString();
     const updSourceCompare = updatedSource[childKey].toString();
     const exTargetCompare = existingTarget[childKey].toString();
@@ -37,3 +37,6 @@ export function createDropHandler(parentKey, childKey) {
     }
   };
 }
+
+export const handleItemDrop = createDropHandler('lists', 'items');
+export const handleListDrop = createDropHandler('boards', 'lists');

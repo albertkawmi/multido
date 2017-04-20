@@ -57,3 +57,14 @@ export const create = (type) => (parentId) => (dispatch, getState) => {
 		return dispatch(errorAction);
 	}
 };
+
+// TODO: fix inconsistent factory function signatures
+
+export const createItem = create('item');
+export const updateItem = updateFor('items');
+
+export const createList = create('list');
+export const updateList = updateFor('lists');
+
+export const createBoard = create('board');
+export const updateBoard = updateFor('boards');
