@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 class Test extends Component {
 	render() {
 		const { board, lists } = this.props;
-		return <Board {...board} lists={lists} />;
+		return <Board board={board} lists={lists} />;
 	}
 }
 

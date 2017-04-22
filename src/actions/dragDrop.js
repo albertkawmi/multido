@@ -15,22 +15,12 @@ function createDropHandler(parentKey, childKey) {
       ...existingTarget,
       [childKey]: target.elements
     };
-    // TODO: move shouldUpdate logic into dragDrop HOC
-    const exSourceCompare = existingSource[childKey].toString();
-    const updSourceCompare = updatedSource[childKey].toString();
-    const exTargetCompare = existingTarget[childKey].toString();
-    const updTargetCompare = updatedTarget[childKey].toString();
 
-    const shouldUpdateSource = source.id
-      && exSourceCompare !== updSourceCompare;
-
-    const shouldUpdateTarget = target.id
-      && target.id !== source.id
-      && exTargetCompare !== updTargetCompare;
+    const shouldUpdateTarget = target.id !== source.id;
 
     try {
       const update = updateFor(parentKey);
-      if (shouldUpdateSource) update(updatedSource)(dispatch, getState);
+      update(updatedSource)(dispatch, getState);
       if (shouldUpdateTarget) update(updatedTarget)(dispatch, getState);
     } catch (error) {
       console.error(error);

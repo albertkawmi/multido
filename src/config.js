@@ -4,7 +4,13 @@ export const context = {
   actions: PropTypes.object
 };
 
+// TODO: rename boards -> rows
 export const templates = {
+  spaces: {
+    id: 'sp',
+    title: '',
+    boards: []
+  },
   boards: {
     id: 'bd',
     title: '',

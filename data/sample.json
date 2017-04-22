@@ -1,4 +1,11 @@
 {
+    "spaces": {
+        "sp1": {
+            "id": "sp1",
+            "title": "Space 1",
+            "boards": ["bd1", "bd2"]
+        }
+    },
     "boards": {
         "bd1": {
             "id": "bd1",

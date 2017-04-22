@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/Test';
+import Space from './components/Space';
 import './index.css';
 import '../node_modules/react-dragula/dist/dragula.css';
 import sampleData from '../data/sample.json';
@@ -30,9 +30,10 @@ const store = createStore(
   )
 );
 
+// TODO: fix bug where root Space component not rerendering
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <Space space={store.getState().spaces['sp1']} />
   </Provider>,
   document.getElementById('root')
 );

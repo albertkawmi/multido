@@ -1,23 +1,22 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import Board from './Board';
 import { createList, updateBoard } from '../../actions/crud';
 import { handleListDrop } from '../../actions/dragDrop';
 
-const BoardContainer = ({ handleListDrop, updateBoard, createList, ...board }) =>
-  <Board {...board}
-    onTitleChange={ev => updateBoard({
-      ...board,
-      title: ev.target.value
-    })}
-    onListCreated={() => createList(board.id)}
-    onListDrop={handleListDrop}
-  />
+const mapStateToProps = (state, { board }) => ({
+  lists: board.lists.map(listId => state.lists[listId])
+});
 
-const mapDispatchToProps = {
-  handleListDrop,
-  updateBoard,
-  createList
-};
+const mapDispatchToProps = (dispatch, { board }) => ({
+  onTitleChange: ev => dispatch(
+    updateBoard({ ...board, title: ev.target.value })
+  ),
+  onListCreated: () => dispatch(
+    createList(board.id)
+  ),
+  onListDrop: dropInfo => dispatch(
+    handleListDrop(dropInfo)
+  ),
+});
 
-export default connect(null, mapDispatchToProps)(BoardContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(Board);

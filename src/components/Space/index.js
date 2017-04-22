@@ -1,15 +1,18 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import Space from './Space';
-import { createBoard } from '../../actions/crud';
+import { createBoard, updateSpace } from '../../actions/crud';
 
-const SpaceContainer = ({ createBoard, ...space }) =>
-  <Space {...space}
-    onBoardCreated={() => createBoard(space.id)}
-  />
+const mapStateToProps = (state, { space }) => ({
+  boards: space.boards.map(boardId => state.boards[boardId])
+});
 
-const mapDispatchToProps = {
-  createBoard
-};
+const mapDispatchToProps = (dispatch, { space }) => ({
+  onBoardCreated: () => dispatch(
+    createBoard(space.id)
+  ),
+  onTitleChange: ev => dispatch(
+    updateSpace({ ...space, title: ev.target.value })
+  )
+});
 
-export default connect(null, mapDispatchToProps)(SpaceContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(Space);

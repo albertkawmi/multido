@@ -12,11 +12,8 @@ const DropItems = dndContainer({
 })(Items);
 
 const List = ({
-  id: listId,
-  title,
-  // TODO: fix this confusing API
-  items: itemIds,
-  listItems: items,
+  list: { title, id: listId },
+  items,
   onItemDrop,
   onItemCreated,
   onListTitleChange

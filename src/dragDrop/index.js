@@ -32,13 +32,14 @@ export const dndContainer = ({
     });
   }
   return class extends Component {
-    storeIndex = 0
+    rootEl = 0
 
     componentWillMount() {
       dndStore[containerType].on('drop', (el, target, source) => {
         if (!target || !source) return;
         // update the list of ids in the target container
         const targetId = target.getAttribute(CONTAINER_ID);
+        if (targetId !== this.props[idProp]) return;
         const updatedTargetElements = getAttrValues(DRAGGABLE_ID, target);
         // update the list of ids in the source container (if different to target)
         const sourceId = source.getAttribute(CONTAINER_ID);
@@ -46,6 +47,8 @@ export const dndContainer = ({
           ? updatedTargetElements
           : getAttrValues(DRAGGABLE_ID, source);
 
+        // TODO: remove log
+        // console.log('DROP:', this.props[idProp], targetId, sourceId);
         this.props.onDrop({
           source: { id: sourceId, elements: updatedSourceElements },
           target: { id: targetId, elements: updatedTargetElements }
@@ -53,15 +56,34 @@ export const dndContainer = ({
       })
     }
     componentWillUnmount() {
-      dndStore[containerType].containers.splice(this.storeIndex, 1);
+      const { containers } = dndStore[containerType];
+      containers.splice(
+        containers.indexOf(this.rootEl),
+        1
+      );
     }
     rootRef(component) {
       const el = ReactDOM.findDOMNode(component);
       if (!el) return;
+      const id = this.props[idProp];
       el.setAttribute(CONTAINER_TYPE, containerType)
-      el.setAttribute(CONTAINER_ID, this.props[idProp]);
-      this.storeIndex = dndStore[containerType].containers.length;
-      dndStore[containerType].containers.push(el);
+      el.setAttribute(CONTAINER_ID, id);
+      const { containers } = dndStore[containerType];
+      this.rootEl = el;
+      const existingIndex = containers.findIndex(
+        existing => existing.getAttribute(CONTAINER_ID) === id
+      );
+      if (existingIndex > -1) {
+        containers[existingIndex] = el;
+      } else {
+        containers.push(el);
+      }
+      // TODO: remove log
+      // console.log(
+      //   containerType,
+      //   el.getAttribute(CONTAINER_ID),
+      //   dndStore[containerType].containers.length
+      // );
     }
     render() {
       return (

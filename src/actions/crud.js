@@ -1,7 +1,6 @@
 import crud from 'redux-crud';
 import cuid from 'cuid';
 import { templates, parent } from '../config';
-import { plural } from '../utils';
 
 export const updateFor = entityType => updatedEntity => (dispatch, getState) => {
 	const existingEntity = getState()[entityType][updatedEntity.id];
@@ -23,8 +22,7 @@ export const updateFor = entityType => updatedEntity => (dispatch, getState) => 
 	}
 };
 
-export const create = (type) => (parentId) => (dispatch, getState) => {
-	const entityType = plural(type);
+export const createFor = entityType => parentId => (dispatch, getState) => {
 	const parentType = parent[entityType];
 	const {
 		createStart,
@@ -58,13 +56,14 @@ export const create = (type) => (parentId) => (dispatch, getState) => {
 	}
 };
 
-// TODO: fix inconsistent factory function signatures
-
-export const createItem = create('item');
+export const createItem = createFor('items');
 export const updateItem = updateFor('items');
 
-export const createList = create('list');
+export const createList = createFor('lists');
 export const updateList = updateFor('lists');
 
-export const createBoard = create('board');
+export const createBoard = createFor('boards');
 export const updateBoard = updateFor('boards');
+
+export const createSpace = createFor('spaces');
+export const updateSpace = updateFor('spaces');

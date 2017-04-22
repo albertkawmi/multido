@@ -11,7 +11,13 @@ const DndBoard = dndContainer({
   direction: 'horizontal'
 })(ContainerBoard);
 
-const Board = ({ title, lists, id: boardId, onListDrop, onTitleChange, onListCreated }) => {
+const Board = ({
+  board: { title, id: boardId },
+  lists,
+  onListDrop,
+  onTitleChange,
+  onListCreated
+}) => {
   return (
     <div className="board">
       <input
@@ -22,7 +28,7 @@ const Board = ({ title, lists, id: boardId, onListDrop, onTitleChange, onListCre
       />
       <DndBoard id={boardId} onDrop={onListDrop}>
         {lists.map(
-          list => <List {...list} key={list.id} />
+          list => <List list={list} id={list.id} key={list.id} />
         )}
       </DndBoard>
       <button

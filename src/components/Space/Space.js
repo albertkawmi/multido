@@ -1,12 +1,16 @@
-import React, { Component } from 'react';
-import initialState from '../../data/sample.json';
-import bindActions from '../actions';
-import Board from './Board';
+import React from 'react';
+import Board from '../Board';
 
-export default const Space = ({ boards, onBoardCreated }) =>
+const Space = ({ space, boards, onTitleChange, onBoardCreated }) =>
   <main className="boards">
-    {Object.keys(boards).map(
-      boardId => <Board {...boards[boardId]} key={boardId} />
+    <input
+      className="space__title"
+      value={space.title}
+      onChange={onTitleChange}
+      placeholder="(untitled)"
+    />
+    {boards.map(
+      board => <Board board={board} id={board.id} key={board.id} />
     )}
     <button
       className="new-board-btn"
@@ -14,3 +18,5 @@ export default const Space = ({ boards, onBoardCreated }) =>
       + New Board
     </button>
   </main>
+
+  export default Space;
