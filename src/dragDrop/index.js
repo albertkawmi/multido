@@ -32,14 +32,23 @@ export const dndContainer = ({
     });
   }
   return class extends Component {
-    rootEl = 0
+    rootEl = null
 
     componentWillMount() {
       dndStore[containerType].on('drop', (el, target, source) => {
         if (!target || !source) return;
-        // update the list of ids in the target container
         const targetId = target.getAttribute(CONTAINER_ID);
+        /**
+         * NOTE:
+         * the on 'drop' handler fires for _ALL_ containers
+         * the next line prevents any further work being done for
+         * unrelated containers.
+         *
+         * TODO: investigate if this should be further optimised
+         */
         if (targetId !== this.props[idProp]) return;
+
+        // update the list of ids in the target container
         const updatedTargetElements = getAttrValues(DRAGGABLE_ID, target);
         // update the list of ids in the source container (if different to target)
         const sourceId = source.getAttribute(CONTAINER_ID);
@@ -56,6 +65,7 @@ export const dndContainer = ({
       })
     }
     componentWillUnmount() {
+      // TODO: confirm that no further clean-up is needed
       const { containers } = dndStore[containerType];
       containers.splice(
         containers.indexOf(this.rootEl),
@@ -118,8 +128,10 @@ export const dndElement = ({
 };
 
 function getAttrValues(attr, el) {
-  // an ID attribute is used to only select direct child elements
+  // TODO: using something custom instead of 'id'
+  // can't 100% rely on 'id' being unique
   const originalId = el.getAttribute('id');
+  // an ID attribute is used to select only direct child elements
   let tempId;
   if (!originalId) {
     tempId = `TEMP_ID_${Date.now()}`
@@ -129,6 +141,7 @@ function getAttrValues(attr, el) {
   // find matching elements and map to the required attr
   const scopeId = originalId || tempId;
   const matchingAttrs = Array
+    // TODO: does it _have_ to be immediate children?
     .from(el.querySelectorAll(`#${scopeId} > [${attr}]`))
     .map(el => el.getAttribute(attr));
 
