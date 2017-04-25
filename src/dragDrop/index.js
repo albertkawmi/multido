@@ -7,6 +7,8 @@ const DRAGGABLE_ID = 'dnd-draggable-id';
 const CONTAINER_TYPE = 'dnd-container-type';
 const CONTAINER_ID = 'dnd-container-id';
 
+const CONTAINER_DIV_SCROLL_RATE = 0.2;
+
 const dndStore = {};
 
 export const dndContainer = ({
@@ -14,8 +16,15 @@ export const dndContainer = ({
   containerType,
   acceptType,
   handleClassName,
-  direction = 'vertical'
+  direction = 'vertical',
+  containerScrollRate = CONTAINER_DIV_SCROLL_RATE
 }) => (ComponentToWrap) => {
+  if (!containerType) throw new Error('dndContainer must specify containerType');
+  if (!acceptType) throw new Error('dndContainer must specify acceptType');
+  // TODO: improve checking for valid React component
+  const isValidComponent = ['function', 'object'].includes(typeof ComponentToWrap);
+  if (!isValidComponent) throw new Error('dndContainer must be applied to a valid React component');
+
   const WrappedComponent = ensureClassComponent(ComponentToWrap);
 
   if (!dndStore[containerType]) {
@@ -32,10 +41,13 @@ export const dndContainer = ({
     });
   }
   return class extends Component {
+    // these are set in the rootRef method
     rootEl = null
+    scrollParentEl = null
 
     componentWillMount() {
-      dndStore[containerType].on('drop', (el, target, source) => {
+      dndStore[containerType]
+      .on('drop', (el, target, source) => {
         if (!target || !source) return;
         const targetId = target.getAttribute(CONTAINER_ID);
         /**
@@ -63,6 +75,22 @@ export const dndContainer = ({
           target: { id: targetId, elements: updatedTargetElements }
         });
       })
+      /**
+       * Scroll parent element when dragged item is at the top or bottom.
+       * This is to allow dragging within fixed-height scrolling containers.
+       *
+       * NOTE:
+       * This is applied to every container element on the page.
+       * 1000 containers => 2000 event listeners
+       */
+      .on('drag', () => {
+        document.addEventListener('mousemove', this.scrollParentEl);
+        document.addEventListener('touchmove', this.scrollParentEl);
+      })
+      .on('dragend', () => {
+        document.removeEventListener('mousemove', this.scrollParentEl);
+        document.removeEventListener('touchmove', this.scrollParentEl);
+      });
     }
     componentWillUnmount() {
       // TODO: confirm that no further clean-up is needed
@@ -80,6 +108,7 @@ export const dndContainer = ({
       el.setAttribute(CONTAINER_ID, id);
       const { containers } = dndStore[containerType];
       this.rootEl = el;
+      this.scrollParentEl = scrollHandlerFor(el, containerScrollRate);
       const existingIndex = containers.findIndex(
         existing => existing.getAttribute(CONTAINER_ID) === id
       );
@@ -168,3 +197,18 @@ function convertToClass(StatelessComponent) {
     render = () => <StatelessComponent {...this.props} />;
   };
 }
+
+function scrollHandlerFor(parentEl, rate) {
+  return ev => {
+    const parent = parentEl;
+    const height = parent.clientHeight;
+    const mousePosition = ev.pageY;
+    const top = parent.offsetTop;
+    const bottom = top + height;
+    if (mousePosition < top) {
+      parent.scrollTop -= rate * (top - mousePosition);
+    } else if (mousePosition > bottom) {
+      parent.scrollTop += rate * (mousePosition - bottom);
+    }
+  };
+};
