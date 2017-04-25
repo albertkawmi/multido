@@ -9,6 +9,7 @@ const CONTAINER_ID = 'dnd-container-id';
 
 const CONTAINER_DIV_SCROLL_RATE = 0.2;
 
+// Needs to be a global store to allow drag-drop across multiple instances
 const dndStore = {};
 
 export const dndContainer = ({
