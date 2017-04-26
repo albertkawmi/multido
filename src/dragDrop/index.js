@@ -234,7 +234,7 @@ function verticalScroll(parentEl, rate) {
   };
 };
 
-function horizontalSrcoll(parent, rate) {
+function horizontalSrcoll(parentEl, rate) {
   return ev => {
     const parent = parentEl;
     const width = parent.clientWidth;
