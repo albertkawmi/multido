@@ -6,19 +6,22 @@ const DRAGGABLE_TYPE = 'dnd-draggable-type';
 const DRAGGABLE_ID = 'dnd-draggable-id';
 const CONTAINER_TYPE = 'dnd-container-type';
 const CONTAINER_ID = 'dnd-container-id';
-
 const CONTAINER_DIV_SCROLL_RATE = 0.2;
+
+const DEFAULT_DIRECTION = 'vertical';
+const DEFAULT_ID_PROP = 'id';
 
 // Needs to be a global store to allow drag-drop across multiple instances
 const dndStore = {};
 
 export const dndContainer = ({
-  idProp = 'id',
+  idProp = DEFAULT_ID_PROP,
   containerType,
   acceptType,
   handleClassName,
-  direction = 'vertical',
-  containerScrollRate = CONTAINER_DIV_SCROLL_RATE
+  direction = DEFAULT_DIRECTION,
+  containerScrollRate = CONTAINER_DIV_SCROLL_RATE,
+  scrollContainerAtBoundaries = false
 }) => (ComponentToWrap) => {
   if (!containerType) throw new Error('dndContainer must specify containerType');
   if (!acceptType) throw new Error('dndContainer must specify acceptType');
@@ -50,6 +53,10 @@ export const dndContainer = ({
       dndStore[containerType]
       .on('drop', (el, target, source) => {
         if (!target || !source) return;
+        if (typeof this.props.onDrop !== 'function') {
+          console.warn('Invalid onDrop handler passed to drag-drop container component.');
+          return;
+        }
         const targetId = target.getAttribute(CONTAINER_ID);
         /**
          * NOTE:
@@ -62,12 +69,12 @@ export const dndContainer = ({
         if (targetId !== this.props[idProp]) return;
 
         // update the list of ids in the target container
-        const updatedTargetElements = getAttrValues(DRAGGABLE_ID, target);
+        const updatedTargetElements = getDraggableChildIds(target);
         // update the list of ids in the source container (if different to target)
         const sourceId = source.getAttribute(CONTAINER_ID);
         const updatedSourceElements = sourceId === targetId
           ? updatedTargetElements
-          : getAttrValues(DRAGGABLE_ID, source);
+          : getDraggableChildIds(source);
 
         // TODO: remove log
         // console.log('DROP:', this.props[idProp], targetId, sourceId);
@@ -76,6 +83,10 @@ export const dndContainer = ({
           target: { id: targetId, elements: updatedTargetElements }
         });
       })
+      .on('drag', () => this.addScrollHandlers())
+      .on('dragend', () => this.removeScrollHandlers());
+    }
+    addScrollHandlers() {
       /**
        * Scroll parent element when dragged item is at the top or bottom.
        * This is to allow dragging within fixed-height scrolling containers.
@@ -84,32 +95,50 @@ export const dndContainer = ({
        * This is applied to every container element on the page.
        * 1000 containers => 2000 event listeners
        */
-      .on('drag', () => {
+      if (this.scrollParentEl) {
         document.addEventListener('mousemove', this.scrollParentEl);
         document.addEventListener('touchmove', this.scrollParentEl);
-      })
-      .on('dragend', () => {
+      }
+    }
+    removeScrollHandlers() {
+      if (this.scrollParentEl) {
         document.removeEventListener('mousemove', this.scrollParentEl);
         document.removeEventListener('touchmove', this.scrollParentEl);
-      });
+      }
     }
     componentWillUnmount() {
-      // TODO: confirm that no further clean-up is needed
+      // remove dragula container reference
       const { containers } = dndStore[containerType];
       containers.splice(
         containers.indexOf(this.rootEl),
         1
       );
+      // removeScrollHandlers in case unmounts mid-drag
+      this.removeScrollHandlers();
+      // TODO: confirm that no further clean-up is needed
     }
     rootRef(component) {
       const el = ReactDOM.findDOMNode(component);
       if (!el) return;
+
+      // assign container ids
       const id = this.props[idProp];
       el.setAttribute(CONTAINER_TYPE, containerType)
       el.setAttribute(CONTAINER_ID, id);
+
       const { containers } = dndStore[containerType];
+
+      // save DOM reference for cleanup later
       this.rootEl = el;
-      this.scrollParentEl = scrollHandlerFor(el, containerScrollRate);
+
+      // setup container scroll handler if needed
+      if (scrollContainerAtBoundaries) {
+        this.scrollParentEl = direction === 'vertical'
+          ? verticalScroll(el, containerScrollRate)
+          : horizontalSrcoll(el, containerType);
+      }
+
+      // add container to dndStore
       const existingIndex = containers.findIndex(
         existing => existing.getAttribute(CONTAINER_ID) === id
       );
@@ -157,28 +186,19 @@ export const dndElement = ({
   }
 };
 
-function getAttrValues(attr, el) {
-  // TODO: using something custom instead of 'id'
-  // can't 100% rely on 'id' being unique
-  const originalId = el.getAttribute('id');
-  // an ID attribute is used to select only direct child elements
-  let tempId;
-  if (!originalId) {
-    tempId = `TEMP_ID_${Date.now()}`
-    el.setAttribute('id', tempId);
-  }
-
+// Node -> [String]
+function getDraggableChildIds(parentEl) {
   // find matching elements and map to the required attr
-  const scopeId = originalId || tempId;
-  const matchingAttrs = Array
+  const parentId = parentEl.getAttribute(CONTAINER_ID);
+  const draggableChildEls = parentEl.querySelectorAll(
     // TODO: does it _have_ to be immediate children?
-    .from(el.querySelectorAll(`#${scopeId} > [${attr}]`))
-    .map(el => el.getAttribute(attr));
+    `[${CONTAINER_ID}=${parentId}] > [${DRAGGABLE_ID}]`
+  );
+  const childIds = Array
+    .from(draggableChildEls)
+    .map(child => child.getAttribute(DRAGGABLE_ID));
 
-  // remove the tempId, if needed
-  if (!originalId) el.removeAttribute('id');
-
-  return matchingAttrs;
+  return childIds;
 }
 
 /**
@@ -199,7 +219,7 @@ function convertToClass(StatelessComponent) {
   };
 }
 
-function scrollHandlerFor(parentEl, rate) {
+function verticalScroll(parentEl, rate) {
   return ev => {
     const parent = parentEl;
     const height = parent.clientHeight;
@@ -213,3 +233,18 @@ function scrollHandlerFor(parentEl, rate) {
     }
   };
 };
+
+function horizontalSrcoll(parent, rate) {
+  return ev => {
+    const parent = parentEl;
+    const width = parent.clientWidth;
+    const mousePosition = ev.pageX;
+    const left = parent.offsetLeft;
+    const right = left + width;
+    if (mousePosition < left) {
+      parent.scrollLeft -= rate * (left - mousePosition);
+    } else if (mousePosition > right) {
+      parent.scrollLeft += rate * (mousePosition - right);
+    }
+  };
+}
