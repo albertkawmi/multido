@@ -1,5 +1,5 @@
 import React from 'react';
-import { dndElement } from '../../dragDrop';
+import { dndElement } from 'react-dragula-hoc';
 
 const itemClassname = completed =>
   `item__textarea ${completed ? 'item__textarea--completed' : ''}`;

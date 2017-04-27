@@ -15,7 +15,7 @@ function createDropHandler(parentKey, childKey) {
       ...existingTarget,
       [childKey]: target.elements
     };
-
+    console.log('DROP', source.id, target.id)
     const shouldUpdateTarget = target.id !== source.id;
 
     try {

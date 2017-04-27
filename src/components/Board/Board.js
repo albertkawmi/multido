@@ -1,5 +1,5 @@
 import React from 'react';
-import { dndContainer } from '../../dragDrop';
+import { dndContainer } from 'react-dragula-hoc';
 import List from '../List';
 
 const ContainerBoard = ({ children }) => <section className="board__items">{children}</section>;
@@ -26,7 +26,7 @@ const Board = ({
         onChange={onTitleChange}
         placeholder="(untitled)"
       />
-      <DndBoard id={boardId} onDrop={onListDrop}>
+      <DndBoard id={boardId} onChange={onListDrop}>
         {lists.map(
           list => <List list={list} id={list.id} key={list.id} />
         )}
