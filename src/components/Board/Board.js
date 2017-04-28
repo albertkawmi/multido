@@ -12,7 +12,7 @@ const DndBoard = dndContainer({
 })(ContainerBoard);
 
 const Board = ({
-  board: { title, id: boardId },
+  board: { id: boardId, title },
   lists,
   onListDrop,
   onTitleChange,
