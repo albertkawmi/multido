@@ -1,5 +1,5 @@
 import React from 'react';
-import { dndContainer, dndElement } from '../../dragDrop';
+import { dndContainer, dndElement } from 'react-dragula-hoc';
 import Item from '../Item';
 
 const Items = ({ children }) => <ul className="list__items">{children}</ul>;
@@ -26,7 +26,7 @@ const List = ({
         value={title}
         placeholder="(untitled)"
       />
-      <DropItems id={listId} onDrop={onItemDrop} >
+      <DropItems id={listId} onChange={onItemDrop} >
         {items.map(
           item => <Item item={item} id={item.id} key={item.id} />
         )}
