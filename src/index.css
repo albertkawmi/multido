@@ -5,7 +5,7 @@ body {
   background: #222;
 }
 
-div, ul, li, main, section, input {
+div, ul, li, main, section, input, textarea {
   box-sizing: border-box;
 }
 
@@ -183,22 +183,15 @@ div, ul, li, main, section, input {
 
 .item__textarea {
   width: 100%;
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 1rem;
   padding: 0.5rem;
   margin: 0 0.5rem;
-  min-height: 1rem;
-}
-
-.dynamic-textarea {
-  resize: none;
   border: 0;
-  flex: 1;
-  overflow: hidden;
   background: none;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1rem;
 }
 
-.dynamic-textarea:focus {
+.item__textarea:focus {
   background: lightyellow;
 }
 

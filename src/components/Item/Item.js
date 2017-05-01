@@ -1,15 +1,11 @@
 import React from 'react';
 import { dndElement } from 'react-dragula-hoc';
+import { TextArea } from '../UI';
 
-const itemClassname = completed =>
-  `item__textarea ${completed ? 'item__textarea--completed' : ''}`;
-
-const itemTextHeight = text => ({
-  height: `${Math.ceil(
-    text.replace('\n', '').length / 27 +
-    1.1 * text.split('\n').length - 1 + 0.25)
-  }rem`
-});
+const itemClassname = completed => [
+  'item__textarea',
+  completed && 'item__textarea--completed',
+].filter(Boolean).join(' ');
 
 export const Item = ({
   item: { id, text, completed },
@@ -18,9 +14,8 @@ export const Item = ({
 }) =>
   <li className="item">
     <span className="item__handle" />
-    <textarea
-      className={itemClassname(completed) + ' dynamic-textarea'}
-      style={itemTextHeight(text)}
+    <TextArea
+      className={itemClassname(completed)}
       onChange={onTextChange}
       value={text}
       placeholder="(empty)"
