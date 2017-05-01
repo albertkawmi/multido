@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Radium from 'radium';
 
 class TextArea extends Component {
   componentDidMount() {
@@ -37,4 +38,4 @@ class TextArea extends Component {
   }
 }
 
-export default TextArea;
+export default Radium(TextArea);
