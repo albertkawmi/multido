@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const ListSpaces = ({ spaces }) =>
   <ul className="list-spaces">
-    {spaces.map(space => <LinkToSpace {...space} />)}
+    {spaces.map(space => <LinkToSpace key={space.id} {...space} />)}
   </ul>
 
 const LinkToSpace = ({ id, title }) =>
