@@ -4,14 +4,14 @@ export const context = {
   actions: PropTypes.object
 };
 
-// TODO: rename boards -> rows
+// TODO: rename rows -> rows
 export const templates = {
   spaces: {
     id: 'sp',
     title: '',
-    boards: []
+    rows: []
   },
-  boards: {
+  rows: {
     id: 'bd',
     title: '',
     lists: []
@@ -30,6 +30,6 @@ export const templates = {
 
 export const parent = {
   items: 'lists',
-  lists: 'boards',
-  boards: 'spaces'
+  lists: 'rows',
+  rows: 'spaces'
 }

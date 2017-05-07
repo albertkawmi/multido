@@ -13,7 +13,7 @@ div, ul, li, main, section, input, textarea {
   outline: none;
 }
 
-.boards {
+.rows {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,7 +24,7 @@ div, ul, li, main, section, input, textarea {
   margin: 0 auto;
 }
 
-.new-board-btn {
+.new-row-btn {
   border: 0;
   color: silver;
   background: none;
@@ -34,14 +34,14 @@ div, ul, li, main, section, input, textarea {
   cursor: pointer;
 }
 
-.board {
+.row {
   width: 100%;
   overflow: hidden;
   position: relative;
   background: #eee;
 }
 
-.board__title {
+.row__title {
   margin: 0;
   font-size: 3rem;
   font-weight: normal;
@@ -58,11 +58,11 @@ div, ul, li, main, section, input, textarea {
   text-overflow: ellipsis;
 }
 
-.board__title:focus {
+.row__title:focus {
   background: lightyellow;
 }
 
-.board__items {
+.row__items {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -74,7 +74,7 @@ div, ul, li, main, section, input, textarea {
   min-height: 4rem;
 }
 
-.board__new-list {
+.row__new-list {
   width: 100px;
   padding: 0.5rem;
   border: 0;

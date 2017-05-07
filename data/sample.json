@@ -3,22 +3,22 @@
         "sp1": {
             "id": "sp1",
             "title": "Space 1",
-            "boards": ["bd1", "bd2"]
+            "rows": ["rw1", "rw2"]
         }
     },
-    "boards": {
-        "bd1": {
-            "id": "bd1",
-            "title": "My First Board",
+    "rows": {
+        "rw1": {
+            "id": "rw1",
+            "title": "Row 1",
             "lists": [
                 "ls1",
                 "ls2",
                 "ls3"
             ]
         },
-        "bd2": {
-            "id": "bd2",
-            "title": "Another Board",
+        "rw2": {
+            "id": "rw2",
+            "title": "Row 2",
             "lists": [
                 "ls4",
                 "ls5",
@@ -29,7 +29,7 @@
     "lists": {
         "ls1": {
             "id": "ls1",
-            "title": "The first board has a very long title, too...",
+            "title": "The first row has a very long title, too...",
             "items": [
                 "i1",
                 "i2",

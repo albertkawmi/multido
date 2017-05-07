@@ -1,10 +1,10 @@
 import React from 'react';
-import Board from '../../components/Board';
+import Row from '../../components/Row';
 
 const Space = (props) =>
   <main className="space">
     <SpaceInfo {...props} />
-    <Boards {...props} />
+    <Rows {...props} />
   </main>
 
 const SpaceInfo = ({ space, onTitleChange }) =>
@@ -17,15 +17,15 @@ const SpaceInfo = ({ space, onTitleChange }) =>
     />
   </div>
 
-const Boards = ({ boards, onBoardCreated }) =>
-  <div className="boards">
-    {boards.map(
-      board => <Board board={board} id={board.id} key={board.id} />
+const Rows = ({ rows, onRowCreated }) =>
+  <div className="rows">
+    {rows.map(
+      row => <Row row={row} id={row.id} key={row.id} />
     )}
     <button
-      className="new-board-btn"
-      onClick={onBoardCreated}>
-      + New Board
+      className="new-row-btn"
+      onClick={onRowCreated}>
+      + New Row
     </button>
   </div>
 

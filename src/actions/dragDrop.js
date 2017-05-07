@@ -29,4 +29,4 @@ function createDropHandler(parentKey, childKey) {
 }
 
 export const handleItemDrop = createDropHandler('lists', 'items');
-export const handleListDrop = createDropHandler('boards', 'lists');
+export const handleListDrop = createDropHandler('rows', 'lists');

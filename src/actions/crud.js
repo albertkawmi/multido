@@ -62,8 +62,8 @@ export const updateItem = updateFor('items');
 export const createList = createFor('lists');
 export const updateList = updateFor('lists');
 
-export const createBoard = createFor('boards');
-export const updateBoard = updateFor('boards');
+export const createRow = createFor('rows');
+export const updateRow = updateFor('rows');
 
 export const createSpace = createFor('spaces');
 export const updateSpace = updateFor('spaces');

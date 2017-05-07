@@ -1,15 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Space from './Space';
-import { createBoard, updateSpace } from '../../actions/crud';
+import { createRow, updateSpace } from '../../actions/crud';
 
 // TODO: refactor to avoid having separate SpaceContainer
-const SpaceContainer = ({ spaces, boards, match, dispatch }) =>
+const SpaceContainer = ({ spaces, rows, match, dispatch }) =>
   <Space
     space={spaces[match.params.id]}
-    onBoardCreated={
+    onRowCreated={
       () => dispatch(
-        createBoard(match.params.id)
+        createRow(match.params.id)
       )
     }
     onTitleChange={
@@ -17,15 +17,15 @@ const SpaceContainer = ({ spaces, boards, match, dispatch }) =>
         updateSpace({ ...spaces[match.params.id], title: ev.target.value })
       )
     }
-    boards={
-      spaces[match.params.id].boards
-        .map(boardId => boards[boardId])
+    rows={
+      spaces[match.params.id].rows
+        .map(rowId => rows[rowId])
     }
   />
 
 const mapStateToProps = (state) => ({
   spaces: state.spaces,
-  boards: state.boards
+  rows: state.rows
 });
 
 const mapDispatchToProps = (dispatch) => ({ dispatch });

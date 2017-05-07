@@ -2,7 +2,7 @@ import crud from 'redux-crud';
 
 export default {
     spaces: crud.Map.reducersFor('spaces'),
-    boards: crud.Map.reducersFor('boards'),
+    rows: crud.Map.reducersFor('rows'),
     lists: crud.Map.reducersFor('lists'),
     items: crud.Map.reducersFor('items'),
 };
