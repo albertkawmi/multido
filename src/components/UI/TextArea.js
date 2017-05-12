@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class TextArea extends Component {
   componentDidMount() {
-    this.updateHeight();
+    this.updateHeight(true);
   }
   componentDidUpdate() {
     this.updateHeight();
@@ -13,7 +13,7 @@ class TextArea extends Component {
 
     this.updateHeight();
   }
-  updateHeight = () => {
+  updateHeight = (firstRender) => {
     if (!this.ref) return;
 
     let { borderTopWidth, borderBottomWidth } = window.getComputedStyle(this.ref);
@@ -23,7 +23,7 @@ class TextArea extends Component {
     this.ref.rows = '1';
     this.ref.style.minHeight = '0';
     this.ref.style.resize = 'none';
-    this.ref.style.height = 'auto';
+    if (!firstRender) this.ref.style.height = 'auto';
     this.ref.style.height = (this.ref.scrollHeight + borderTopWidth + borderBottomWidth) + 'px';
   }
   render() {
