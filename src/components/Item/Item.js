@@ -1,6 +1,6 @@
 import React from 'react';
 import { dndElement } from 'react-dragula-hoc';
-import { TextArea } from '../UI';
+import { TextArea, Icon } from '../UI';
 
 const itemClassname = completed => [
   'item__textarea',
@@ -13,20 +13,23 @@ export const Item = ({
   onToggleCompleted
 }) =>
   <li className="item">
-    <span className="item__handle" />
+    <div className="item__handle" />
     <TextArea
       className={itemClassname(completed)}
       onChange={onTextChange}
       value={text}
-      placeholder="(empty)"
     />
-    <input
-      className="item__checkbox"
-      id={id}
-      type="checkbox"
-      checked={completed}
-      onChange={onToggleCompleted}
+    <div className="item__menu">
+      <Icon name="x" />
+      <input
+        className="item__checkbox"
+        id={id}
+        type="checkbox"
+        checked={completed}
+        onChange={onToggleCompleted}
+        style={{ display: 'none' }}
       />
+    </div>
   </li>
 
 const DraggableItem = dndElement({
