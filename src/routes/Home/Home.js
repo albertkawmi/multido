@@ -3,7 +3,13 @@ import { Link } from 'react-router-dom';
 
 const Home = () =>
   <main>
-    <Link className="home-login" to="/spaces">Login</Link>
+    <div className="home__login">
+      <input type="email" placeholder="email" />
+      <input type="password" placeholder="password" />
+      <Link to="/spaces">
+        <button className="login-button">Log in</button>
+      </Link>
+    </div>
   </main>
 
 export default Home;
