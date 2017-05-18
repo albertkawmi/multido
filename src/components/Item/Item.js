@@ -20,7 +20,7 @@ export const Item = ({
       value={text}
     />
     <div className="item__menu">
-      <Icon name="x" />
+      <Icon name="x" tooltip="Delete Item" />
       <input
         className="item__checkbox"
         id={id}
