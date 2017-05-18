@@ -3,9 +3,9 @@ import Row from '../../components/Row';
 
 const Space = (props) =>
   <main>
-    <SpaceInfo {...props} />
     <div className="space">
       <Rows {...props} />
+      <Pane />
     </div>
   </main>
 
@@ -19,8 +19,9 @@ const SpaceInfo = ({ space, onTitleChange }) =>
     />
   </div>
 
-const Rows = ({ rows, onRowCreated }) =>
+const Rows = ({ rows, space, onTitleChange, onRowCreated }) =>
   <div className="rows">
+    <SpaceInfo space={space} onTitleChange={onTitleChange} />
     {rows.map(
       row => <Row row={row} id={row.id} key={row.id} />
     )}

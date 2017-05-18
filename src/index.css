@@ -14,6 +14,14 @@ div, ul, li, main, section, input, textarea {
   box-sizing: border-box;
 }
 
+a, a:visited, a:active {
+  color: var(--almost-black);
+}
+
+button {
+  background: none;
+}
+
 *:focus {
   outline: none;
 }
@@ -48,7 +56,6 @@ header {
 }
 
 main {
-  border: solid 8px lime;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -76,22 +83,49 @@ footer {
   color: var(--gray);
 }
 
+.home__login {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.home__login input {
+  width: 100%;
+  padding: 0.825rem;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  border: 0;
+}
+
+.list-spaces {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.list-spaces li {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  font-size: 2rem;
+  text-align: center;
+}
+
 .space {
   display: flex;
   align-self: flex-start;
-  border: solid 8px red;
   overflow: hidden;
   width: 100%;
 }
 
 .space__info {
   background: var(--dark-smoke);
+  align-self: stretch;
 }
 
 .pane {
   background: var(--full-white);
   padding: 2rem;
-  /*min-width: 300px;*/
+  width: 300px;
   flex: 0.2;
   box-shadow: inset 20px 19px 116px -54px rgba(0,0,0,0.54);
 }
@@ -114,11 +148,9 @@ footer {
 }
 
 .row {
-  /*border: solid 1px lime;*/
   width: 100%;
   overflow: hidden;
   position: relative;
-  border-bottom: solid 0.25rem var(--silver);
 }
 
 .space__title,
@@ -147,11 +179,11 @@ footer {
 .space__title {
   position: static;
   width: 100%;
-  text-align: center;
   font-weight: bold;
-  font-size: 3rem;
-  background: var(--full-white);
-  border-bottom: solid 0.25rem var(--silver);
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+  /*background: var(--full-white);*/
 }
 
 .row__items {
@@ -213,20 +245,30 @@ footer {
 }
 
 .list__items {
+  /*border: solid 1px red;*/
   padding: 0;
   margin: 0.5rem 0;
   list-style-type: none;
+  width: 100%;
 }
 
+.list__items.empty {
+  border: dashed 1px var(--light-silver);
+  min-height: 3rem;
+}
+
+.login-button,
 .list__add-item {
   border: 0;
-  width: 16rem;
+  width: 100%;
   color: var(--gray);
-  background: none;
   background: var(--dark-smoke);
   padding: 1rem;
   font-size: 1rem;
   cursor: pointer;
+}
+
+.list__add-item {
   visibility: hidden;
 }
 

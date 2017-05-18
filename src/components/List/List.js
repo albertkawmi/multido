@@ -2,7 +2,14 @@ import React from 'react';
 import { dndContainer, dndElement } from 'react-dragula-hoc';
 import Item from '../Item';
 
-const Items = ({ children }) => <ul className="list__items">{children}</ul>;
+const Items = ({ children }) =>
+  <ul className={
+    ['list__items',
+      !children.length && 'empty'
+    ].filter(Boolean).join(' ')
+  }>
+    {children}
+  </ul>
 
 const DropItems = dndContainer({
   containerType: 'lists',
@@ -24,7 +31,7 @@ const List = ({
         className="list__title"
         onChange={onListTitleChange}
         value={title}
-        placeholder="(untitled)"
+        placeholder="Untitled List"
       />
       <DropItems id={listId} onChange={onItemDrop} >
         {items.map(
