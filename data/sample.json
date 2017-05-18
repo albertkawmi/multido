@@ -4,6 +4,21 @@
             "id": "sp1",
             "title": "Space 1",
             "rows": ["rw1", "rw2"]
+        },
+        "sp2": {
+            "id": "sp2",
+            "title": "Space 1",
+            "rows": ["rw1", "rw2"]
+        },
+        "sp3": {
+            "id": "sp3",
+            "title": "Space 1",
+            "rows": ["rw1", "rw2"]
+        },
+        "sp4": {
+            "id": "sp4",
+            "title": "Space 1",
+            "rows": ["rw1", "rw2"]
         }
     },
     "rows": {
