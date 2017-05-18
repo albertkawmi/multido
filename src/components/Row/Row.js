@@ -24,7 +24,7 @@ const Row = ({
         className="row__title"
         value={title}
         onChange={onTitleChange}
-        placeholder="(untitled)"
+        placeholder="Untitled Row"
       />
       <DndRow id={rowId} onChange={onListDrop}>
         {lists.map(

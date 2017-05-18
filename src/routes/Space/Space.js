@@ -2,9 +2,11 @@ import React from 'react';
 import Row from '../../components/Row';
 
 const Space = (props) =>
-  <main className="space">
+  <main>
     <SpaceInfo {...props} />
-    <Rows {...props} />
+    <div className="space">
+      <Rows {...props} />
+    </div>
   </main>
 
 const SpaceInfo = ({ space, onTitleChange }) =>
@@ -27,6 +29,12 @@ const Rows = ({ rows, onRowCreated }) =>
       onClick={onRowCreated}>
       + New Row
     </button>
+  </div>
+
+const Pane = () =>
+  <div className="pane">
+    <h3>This is a pane</h3>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officia omnis a corporis iusto! Obcaecati placeat qui, voluptate asperiores! Harum necessitatibus minima possimus ipsum dolor, libero et. Quidem, error soluta est.</p>
   </div>
 
 export default Space;

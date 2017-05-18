@@ -2,9 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const ListSpaces = ({ spaces }) =>
-  <ul className="list-spaces">
-    {spaces.map(space => <LinkToSpace key={space.id} {...space} />)}
-  </ul>
+  <main>
+    <ul className="list-spaces">
+      {spaces.map(space => <LinkToSpace key={space.id} {...space} />)}
+    </ul>
+  </main>
 
 const LinkToSpace = ({ id, title }) =>
   <li className="list-spaces__link">
