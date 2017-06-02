@@ -2,22 +2,22 @@
     "spaces": {
         "sp1": {
             "id": "sp1",
-            "title": "Space 1",
+            "title": "My First Space",
             "rows": ["rw1", "rw2"]
         },
         "sp2": {
             "id": "sp2",
-            "title": "Space 1",
+            "title": "An Amazing Project",
             "rows": ["rw1", "rw2"]
         },
         "sp3": {
             "id": "sp3",
-            "title": "Space 1",
+            "title": "The one with the very long name just to make sure nothing breaks and to check whether or not we need a character restriction. We might.",
             "rows": ["rw1", "rw2"]
         },
         "sp4": {
             "id": "sp4",
-            "title": "Space 1",
+            "title": "No. 4",
             "rows": ["rw1", "rw2"]
         }
     },
