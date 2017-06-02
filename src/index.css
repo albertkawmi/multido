@@ -302,6 +302,10 @@ footer {
   opacity: 0;
 }
 
+.item__handle.selected {
+  opacity: 0.5;
+}
+
 .item:hover .item__handle {
   opacity: 1;
 }
