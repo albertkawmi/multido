@@ -56,8 +56,36 @@ export const createFor = entityType => parentId => (dispatch, getState) => {
 	}
 };
 
+export const deleteFor = entityType => (item, parentId) => (dispatch, getState) => {
+	const {
+		deleteStart,
+		deleteSuccess,
+		deleteError
+	} = crud.actionCreatorsFor(entityType);
+	const parentType = 'lists';
+	const updateParent = updateFor(parentType);
+	const startAction = deleteStart(item);
+	dispatch(startAction);
+	try {
+		const successAction = deleteSuccess(item);
+		dispatch(successAction);
+		const existingParent = getState()[parentType][parentId];
+		const updatedParent = {
+			...existingParent,
+			[entityType]: existingParent[entityType].filter(
+				id => id !== item.id
+			)
+		};
+		return updateParent(updatedParent)(dispatch, getState);
+	} catch (error) {
+		const errorAction = deleteError(error);
+		dispatch(errorAction);
+	}
+};
+
 export const createItem = createFor('items');
 export const updateItem = updateFor('items');
+export const deleteItem = deleteFor('items');
 
 export const createList = createFor('lists');
 export const updateList = updateFor('lists');

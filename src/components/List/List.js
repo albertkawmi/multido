@@ -35,7 +35,7 @@ const List = ({
       />
       <DropItems id={listId} onChange={onItemDrop} >
         {items.map(
-          item => <Item item={item} id={item.id} key={item.id} />
+          item => <Item item={item} parent={listId} id={item.id} key={item.id} />
         )}
       </DropItems>
       <button

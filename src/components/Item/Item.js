@@ -9,18 +9,21 @@ const itemClassname = completed => [
 
 export const Item = ({
   item: { id, text, completed },
+  selected,
   onTextChange,
-  onToggleCompleted
+  onToggleCompleted,
+  onSelected,
+  onDelete
 }) =>
   <li className="item">
-    <div className="item__handle" />
+    <ItemHandle selected={selected} onSelected={onSelected} />
     <TextArea
       className={itemClassname(completed)}
       onChange={onTextChange}
       value={text}
     />
     <div className="item__menu">
-      <Icon name="x" tooltip="Delete Item" />
+      <Icon name="x" tooltip="Delete Item" onClick={onDelete} />
       <input
         className="item__checkbox"
         id={id}
@@ -31,6 +34,10 @@ export const Item = ({
       />
     </div>
   </li>
+
+const ItemHandle = ({ selected, onSelected }) =>
+  <div className={`item__handle ${selected ? 'selected' : ''}`}
+    onDoubleClick={onSelected} />
 
 const DraggableItem = dndElement({
   type: 'items'
